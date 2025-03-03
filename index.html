@@ -10,61 +10,56 @@
 </head>
 
 <body>
-    <!--  -->
+    <!-- title -->
     <section id="title">
         <div>
-            <input id="session_inupt" placeholder="bangumi session" type="text">
+            <input id="session_inupt" placeholder="bangumi access token" type="text">
         </div>
         <div>
             <input id="search_input" placeholder="Search" type="text">
             <button type="button" id="search_btn">Search</button>
         </div>
     </section>
-    <!--  -->
-    <section id="calendar">
-        <div id="calendar_bar">
+
+    <!-- calendar -->
+    <section id="calendar" class="card">
+        <div id="calendar_bar" class="card_bar">
             <div>
-                <input type="radio" id="mon" name="weekday" value="1">
-                <label for="mon">星期一</label>
+                <input type="radio" id="radio-mon" name="calendar-weekday" value="1">
+                <label for="radio-mon">星期一</label>
             </div>
             <div>
-                <input type="radio" id="tue" name="weekday" value="2">
-                <label for="tue">星期二</label>
+                <input type="radio" id="radio-tue" name="calendar-weekday" value="2">
+                <label for="radio-tue">星期二</label>
             </div>
             <div>
-                <input type="radio" id="wed" name="weekday" value="3">
-                <label for="wed">星期三</label>
+                <input type="radio" id="radio-wed" name="calendar-weekday" value="3">
+                <label for="radio-wed">星期三</label>
             </div>
             <div>
-                <input type="radio" id="thu" name="weekday" value="4">
-                <label for="thu">星期四</label>
+                <input type="radio" id="radio-thu" name="calendar-weekday" value="4">
+                <label for="radio-thu">星期四</label>
             </div>
             <div>
-                <input type="radio" id="fri" name="weekday" value="5">
-                <label for="fri">星期五</label>
+                <input type="radio" id="radio-fri" name="calendar-weekday" value="5">
+                <label for="radio-fri">星期五</label>
             </div>
             <div>
-                <input type="radio" id="sat" name="weekday" value="6">
-                <label for="sat">星期六</label>
+                <input type="radio" id="radio-sat" name="calendar-weekday" value="6">
+                <label for="radio-sat">星期六</label>
             </div>
             <div>
-                <input type="radio" id="sun" name="weekday" value="7">
-                <label for="sun">星期日</label>
+                <input type="radio" id="radio-sun" name="calendar-weekday" value="7">
+                <label for="radio-sun">星期日</label>
             </div>
         </div>
-        <div id="calendar_wrapper">
-            <!--  -->
-            <!-- <a class="item" href="http://bgm.tv/subject/455626">
-                <img src="http://lain.bgm.tv/pic/cover/l/37/17/455626_6hH1b.jpg" alt="">
-                <div class="desp">
-                    <span class="cnname">我的幸福婚姻 第二季</span><br>
-                    <span class="name">わたしの幸せな結婚 第二期わたしの幸せな結婚 第二期わたしの幸せな結婚 第二期わたしの幸せな結婚 第二期わたしの幸せな結婚 第二期</span></div>
-                    <span class="rank">5330</span>
-                    <span class="score">6.3</span>
-              
-            </a> -->
-            <!--  -->
-        </div>
+        <div id="calendar_wrapper" class="items_row"></div>
+    </section>
+
+    <!-- collections -->
+    <section id="collections" class="card">
+        <div id="calendar_bar" class="card_bar">收藏</div>
+        <div id="collections_wrapper" class="items_row"></div>
     </section>
 
     <script src="js/ua.js"></script>

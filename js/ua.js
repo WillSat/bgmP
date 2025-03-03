@@ -42,7 +42,7 @@ function makePropertyWritable(objBase, objScopeName, propName, initValue) {
     }
 }
 
-console.log(window.navigator.userAgent);
+// console.log(window.navigator.userAgent);
 makePropertyWritable(window, 'navigator', 'userAgent');
 window.navigator.userAgent += '\nPorject: WillSat/bgmP(https://willsat.github.io/bgmP/)';
-console.log(window.navigator.userAgent);
+// console.log(window.navigator.userAgent);

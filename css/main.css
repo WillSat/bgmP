@@ -1,17 +1,31 @@
 :root {
+    /* colors */
     --bg-color: #eee;
     --bg-color-A: #eee4;
-    --text-shadow-color: #000b;
-    --shadow-color: #0006;
+    --text-shadow-color: #0008;
+    --shadow-color: #0004;
     --border-color: #0002;
 
     --theme-color: #3582E9;
     --theme-color-A: #3582E926;
 
-    --rank-bg: #ffce5b;
-    --rank-bg-A: #ffce5b66;
-    --score-bg: #36d598;
-    --score-bg-A: #36d59866;
+    --rank-bg: #f7d78b;
+    --rank-bg-A: #f7d78b66;
+    --score-bg: #64eab6;
+    --score-bg-A: #64eab666;
+
+    /* length */
+    --length-sss: min(.3vw, 3px);
+    --length-ss: min(.5vw, 5px);
+    --length-s: min(1vw, 10px);
+    --length-m: min(1.2vw, 12px);
+    --length-l: min(1.45vw, 14.5px);
+    --length-ll: min(1.7vw, 17px);
+
+    /* border-radis */
+    --border-radius-s: min(.4vw, 4px);
+    --border-radius-m: min(.6vw, 6px);
+    --border-radius-l: min(1.2vw, 12px);
 }
 
 body {
@@ -21,7 +35,7 @@ body {
     background-color: var(--bg-color);
 }
 
-input,
+input[type="text"],
 button {
     background-color: #0001;
     padding: 6px 4px;
@@ -61,57 +75,84 @@ section#title {
     backdrop-filter: blur(20px);
 }
 
-section#calendar {
-    position: absolute;
-    top: 0;
-    left: 0;
+section.card {
+    position: relative;
     width: 98vw;
-    margin: 40px 1vw 0 1vw;
-    padding: min(1vw, 20px) 0 0 0;
+    margin: var(--length-l) 1vw 0 1vw;
     box-sizing: border-box;
     overflow: hidden;
-    /* height: 40px; */
-
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: var(--border-radius-s);
 
-    &>#calendar_bar {
-        width: 100%;
+    &>.card_bar {
         position: relative;
+        width: 100%;
 
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
-        align-items: flex-start;
-        justify-content: center;
-        font-size: min(2vw, 16px);
+        align-items: center;
+        justify-content: flex-start;
+        
+        font-weight: bold;
+        -webkit-user-select: none;
+        user-select: none;
+        color: var(--theme-color);
+        font-size: var(--length-ll);
 
         border-bottom: 1px solid var(--border-color);
-        padding-bottom: min(1vw, 20px);
+        padding: var(--length-m) var(--length-m) var(--length-m) var(--length-m);
+    }
+
+    &>.items_row {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+        padding: var(--length-m) var(--length-m) 0 var(--length-m);
+
+        display: flex;
+        gap: var(--length-m);
+
+        overflow: auto;
+    }
+}
+
+/* calendar */
+section#calendar {
+    top: 0;
+    left: 0;
+    margin-top: calc(40px + var(--length-l));
+
+    &>#calendar_bar {
+        overflow: auto;
+        gap: var(--length-m);
+
+        &>div {
+            flex-shrink: 0;
+        }
     }
 
     &>#calendar_wrapper {
-        padding: min(1vw, 20px) min(1vw, 20px) 0 min(1vw, 20px);
         box-sizing: border-box;
         position: relative;
 
         display: flex;
-        gap: min(1vw, 20px);
+        gap: var(--length-m);
         width: 100%;
         overflow: auto;
     }
 }
 
-a.item {
+.item {
     position: relative;
     flex-shrink: 0;
-    margin: 0 0 min(1vw, 20px) 0;
-    width: min(30vw * 0.7, 150px);
-    height: min(40vw * 0.7, 200px);
-    background-color: var(--theme-color-A);
+    margin: 0 0 var(--length-m) 0;
+    width: min(30vw * .6, 180px);
+    height: min(40vw * .6, 240px);
+    background: linear-gradient(var(--text-shadow-color), var(--theme-color), var(--text-shadow-color));;
     overflow: hidden;
-    border-radius: 6px;
-    box-shadow: 0 4px 8px var(--shadow-color);
+    border-radius: var(--border-radius-m);
+    box-shadow: 0 var(--length-sss) var(--length-ss) var(--shadow-color);
     box-sizing: border-box;
     /* border: 1px solid transparent; */
     transition: all .2s ease-out;
@@ -130,13 +171,13 @@ a.item {
         width: 100%;
         bottom: 0;
         left: 0;
-        font-size: min(1.8vw, 14px);
+        font-size: var(--length-l);
         max-height: 50%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         background-color: #0006;
-        text-shadow: 0 0 12px var(--text-shadow-color);
+        text-shadow: 0 0 var(--length-ss) var(--text-shadow-color);
         backdrop-filter: blur(40px);
         color: #fff;
     }
@@ -151,72 +192,45 @@ a.item {
         top: 0;
         left: 0;
         background-color: var(--rank-bg);
-        box-shadow: 0 0 4px var(--rank-bg-A);
-        color: #fff;
-        font-size: min(1.6vw, 12px);
+        font-size: var(--length-l);
         font-weight: 900;
-        padding: 0 4px;
+        padding: 0 var(--length-sss);
         color: #000;
-        border-radius: 6px;
+        text-shadow: 0 0 var(--length-ss) var(--text-shadow-color);
+        border-radius: var(--border-radius-m);
     }
 
     & .score {
         background-color: var(--score-bg);
-        box-shadow: 0 0 4px var(--score-bg-A);
         top: 0;
         left: unset;
         right: 0;
     }
 
     &>img {
-        /* position: absolute; */
         width: 100%;
-        /* height: 100%; */
     }
 }
 
-/* input[radio] */
 input[type='radio'] {
-    width: 0;
-    height: 0;
-    -webkit-appearance: none;
-    appearance: none;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
-    outline: none;
-}
+    display: none;
 
-input[type='radio']+label {
-    z-index: -1;
-    background-color: var(--theme-color-A);
-    border-radius: 4px;
-    padding: 2px 6px;
-    margin: 0;
-    font-weight: bold;
-    transition: all .15s ease-in-out;
-    -webkit-user-select: none;
-    user-select: none;
-    color: var(--theme-color);
+    &+label {
+        z-index: -1;
+        background-color: var(--theme-color-A);
+        border-radius: var(--border-radius-m);
+        padding: var(--length-sss) var(--length-m);
+        margin: 0;
+        transition: all .1s ease-out;
 
-    &:hover {
+        &:hover {
+            background-color: var(--theme-color);
+            color: #fff;
+        }
+    }
+
+    &:checked+label {
         background-color: var(--theme-color);
         color: #fff;
     }
-}
-
-input:checked+label {
-    background-color: var(--theme-color);
-    color: #fff;
-    /* box-shadow: 0 0 4px var(--theme-color); */
-}
-
-input:checked+label::after {
-    content: "";
-    position: absolute;
-    left: 8px;
-    top: 2px;
-    width: 5px;
-    height: 12px;
-    transform: rotate(45deg);
 }
