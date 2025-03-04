@@ -6,10 +6,14 @@ const LSKeys = {
 };
 const API = 'https://api.bgm.tv';
 
+// ["grid", "small", "common", "medium", "large"];
+const ImageQuality = 'medium';
+
+
 // VAR
 let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
 let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
-const collectionsPreRequest = 20;
+const collectionsPreRequest = 30;
 const collectionsDataList = [];
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
@@ -107,7 +111,7 @@ function createItem(obj) {
     eleTitle += score ? `\n评分：${score}` : '';
 
     let res = `<a class="item" href="${obj['url'] ?? `http://bgm.tv/subject/${obj['id']}`}" title="${eleTitle}">
-    <img src="${obj['images']['large']}" alt="${obj['url']}">
+    <img src="${obj['images'][ImageQuality]}" alt="${obj['url']}">
     <div class="desp">`;
 
     res += obj['name_cn'] && obj['name_cn'] !== obj['name']
