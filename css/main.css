@@ -15,6 +15,7 @@
     --score-bg-A: #64eab666;
 
     /* length */
+    --length-max-s: min(.1vw, 1px);
     --length-sss: min(.3vw, 3px);
     --length-ss: min(.5vw, 5px);
     --length-s: min(1vw, 10px);
@@ -47,7 +48,7 @@ button {
 
     transition: all .2s ease-in-out;
 
-    &#session_inupt {
+    &#access_token_inupt {
         width: 25vw;
     }
 
@@ -100,7 +101,7 @@ section.card {
         color: var(--theme-color);
         font-size: var(--length-ll);
 
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: var(--length-max-s) solid var(--border-color);
         padding: var(--length-m) var(--length-m) var(--length-m) var(--length-m);
     }
 
@@ -149,7 +150,7 @@ section#calendar {
     margin: 0 0 var(--length-m) 0;
     width: min(30vw * .6, 180px);
     height: min(40vw * .6, 240px);
-    background: linear-gradient(var(--text-shadow-color), var(--theme-color), var(--text-shadow-color));;
+    background: linear-gradient(var(--text-shadow-color), var(--theme-color-A), var(--text-shadow-color));;
     overflow: hidden;
     border-radius: var(--border-radius-m);
     box-shadow: 0 var(--length-sss) var(--length-ss) var(--shadow-color);
@@ -161,31 +162,42 @@ section#calendar {
     justify-content: center;
     align-items: center;
 
-    &:hover {
-        /* border: 1px solid var(--theme-color); */
-        transform: scale(1.03);
-    }
-
+    /* border: 1px solid var(--theme-color); */
+    /* transform: scale(1.03); */
+    
     &>.desp {
         position: absolute;
         width: 100%;
         bottom: 0;
         left: 0;
         font-size: var(--length-l);
-        max-height: 50%;
+        text-align: center;
+        padding: var(--length-max-s);
+        box-sizing: border-box;
+        max-height: 80%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        background-color: #0006;
         text-shadow: 0 0 var(--length-ss) var(--text-shadow-color);
-        backdrop-filter: blur(40px);
+        background: linear-gradient(#0000, #0006);
+        backdrop-filter: blur(18px);
         color: #fff;
+        transition: all .3s ease-out;
+        
+        &:hover {
+            white-space: unset;
+            /* font-size: var(--length-m); */
+            background: linear-gradient(#0004, #0008);
+            text-align: start;
+        }
+        
+        & > br + .name {
+            font-size: var(--length-m);
+            font-weight: bold;
+        }
     }
-
-    & .name {
-        font-weight: bold;
-    }
-
+    
+    
     & .rank,
     & .score {
         position: absolute;
@@ -197,18 +209,24 @@ section#calendar {
         padding: 0 var(--length-sss);
         color: #000;
         text-shadow: 0 0 var(--length-ss) var(--text-shadow-color);
-        border-radius: var(--border-radius-m);
+        border-radius: 0 0 var(--border-radius-m) 0;
     }
-
+    
     & .score {
         background-color: var(--score-bg);
         top: 0;
         left: unset;
         right: 0;
+        border-radius: 0 0 0 var(--border-radius-m);
     }
-
+    
     &>img {
         width: 100%;
+        transition: transform .2s ease-out;
+    }
+
+    &:hover > img {
+        transform: scale(1.06);
     }
 }
 

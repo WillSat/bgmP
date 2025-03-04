@@ -1,20 +1,15 @@
 // WillSat/bgmP
 // localStorage keys
 const LSKeys = {
-    bgmSession: 'bangumi_session',
+    bgmAccessToken: 'bangumi_access_token',
+    bgmUserData: 'bangumi_user_data'
 };
 const API = 'https://api.bgm.tv';
 
-const WeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
-
-const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
-
 // VAR
-let bgm_access_token = localStorage.getItem(LSKeys.bgmSession);
-
-let calenderData = [];
-let userData = {};
-const CollectionsPreRequest = 20;
+let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
+let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
+const collectionsPreRequest = 20;
 const collectionsDataList = [];
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
@@ -24,7 +19,10 @@ initCalendar();
 initCollections();
 
 async function initCalendar() { // Calendar
-    calenderData = await request('/calendar', 'GET', false)
+    const WeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
+    const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
+
+    let calenderData = await request('/calendar', 'GET', false);
     randerCalender(calenderData, WeekDay);
 
     // switch event
@@ -57,10 +55,14 @@ async function initCalendar() { // Calendar
     }
 }
 
-async function initCollections() { // Collections
-    userData = await request('/v0/me', 'GET', true);
-    collectionsDataList[0] = await request(`/v0/users/${userData['username']}/collections?limit=${CollectionsPreRequest}&offset=0`, 'GET', true);
-    for (let i = 0; i < Math.floor(collectionsDataList[0]['total'] / CollectionsPreRequest); i++) {
+async function initCollections(isRefresh) { // Collections
+    if (!accessToken) {
+        collectionsWrapperEle.innerHTML = '';
+        return;
+    }
+    if (!userData || isRefresh) await refreshUserData();
+    collectionsDataList[0] = await request(`/v0/users/${userData['username']}/collections?limit=${collectionsPreRequest}&offset=0`, 'GET', true);
+    for (let i = 0; i < Math.floor(collectionsDataList[0]['total'] / collectionsPreRequest); i++) {
         // sign: exists but not be requested yet
         collectionsDataList[i + 1] = false;
     }
@@ -81,36 +83,57 @@ async function initCollections() { // Collections
 async function request(url, method, withAuthorization) {
     const data = await fetch(API + url, withAuthorization ? {
         method: method,
-        headers: new Headers({ 'Authorization': `Bearer ${bgm_access_token}` })
+        headers: new Headers({ 'Authorization': `Bearer ${accessToken}` })
     } : { method: method });
     return await data.json();
 }
 
+async function refreshUserData(isRandering) {
+    const res = await request('/v0/me', 'GET', true);
+    if (res['id']) {
+        userData = res;
+        localStorage.setItem(LSKeys.bgmUserData, JSON.stringify(userData));
+
+        if (isRandering) initCollections();
+    }
+}
+
 function createItem(obj) {
-    let res = `<a class="item" href="${obj['url']}" title="${obj['name_cn'] ? obj['name_cn'] + '\n' : ''}${obj['name']}\nID: ${obj['id']}">
+    const score = obj['rating'] ? obj['rating']['score'] :
+        obj['score'] ? obj['score'] : false;
+
+    let eleTitle = `${obj['name_cn'] ? obj['name_cn'] + '\n' : ''}${obj['name']}\nID: ${obj['id']}`
+    eleTitle += obj['rank'] ? `\n排名：${obj['rank']}` : '';
+    eleTitle += score ? `\n评分：${score}` : '';
+
+    let res = `<a class="item" href="${obj['url'] ?? `http://bgm.tv/subject/${obj['id']}`}" title="${eleTitle}">
     <img src="${obj['images']['large']}" alt="${obj['url']}">
     <div class="desp">`;
 
-    res += obj['name_cn'] ? `<span class="cnname">${obj['name_cn']}</span><br>` : '';
+    res += obj['name_cn'] && obj['name_cn'] !== obj['name']
+        ? `<span class="cnname">${obj['name_cn']}</span><br>` : '';
     res += `<span class="name">${obj['name']}</span></div>`;
     res += obj['rank'] ? `<span class="rank">${obj['rank']}</span>` : '';
-    res += obj['rating'] ? `<span class="score">${obj['rating']['score']}</span>` : '';
+    res += score ? `<span class="score">${score}</span>` : '';
     res += '</a>';
 
     return res;
 }
 
-{ // Session
-    let input = document.getElementById('session_inupt');
-    input.addEventListener('change', function () {
-        bgm_access_token = this.value;
-        localStorage.setItem(LSKeys.bgmSession, this.value);
-    })
-
+{ // Access Token
+    const input = document.getElementById('access_token_inupt');
     // init
-    if (bgm_access_token !== '') {
-        input.value = bgm_access_token;
+    if (accessToken !== null) {
+        input.value = accessToken;
     }
+
+    input.addEventListener('change', function () {
+        accessToken = this.value;
+        localStorage.setItem(LSKeys.bgmAccessToken, accessToken);
+
+        // refresh
+        initCollections(true);
+    })
 }
 
 { // Search
