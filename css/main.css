@@ -29,54 +29,48 @@
 body {
     margin: 0;
     font-family: PingFang SC, PingFang TC, Helvetica, sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
 
     background-color: var(--bg-color);
 }
 
 input[type="text"],
 button {
-    background-color: #0001;
+    background-color: #fff;
     padding: 6px 4px;
     border-radius: 4px;
-    border: 0;
+    border: var(--length-6s) solid var(--border-color);
     box-shadow: none;
     outline: 0;
     font-weight: bold;
-
-    transition: all .2s ease-in-out;
-
+    transition: all .2s ease-out;
     &#access_token_inupt {
         width: min(25vw, 300px);
     }
 
     &:hover {
-        background-color: #0002;
+        background-color: #eee;
     }
 }
 
 section#title {
-    position: fixed;
-    z-index: 10;
+    position: relative;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 40px;
-    padding: 10px 10px;
+    width: 100%;
+    height: 54px;
+    padding: 7px 1vw;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-
-    background-color: var(--bg-color-A);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
 }
 
 section.card {
     position: relative;
-    width: 98vw;
-    margin: var(--length-l) 1vw 0 1vw;
+    width: 98%;
+    margin: 0 1% var(--length-l) 1%;
     box-sizing: border-box;
     overflow: hidden;
     background-color: #fff;
@@ -92,6 +86,7 @@ section.card {
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
+        box-sizing: border-box;
 
         font-weight: bold;
         -webkit-user-select: none;
@@ -168,10 +163,6 @@ section.card {
 
 /* calendar */
 section#calendar {
-    top: 0;
-    left: 0;
-    margin-top: calc(40px + var(--length-l));
-
     &>#calendar_bar {
         overflow: auto;
         gap: var(--length-m);
@@ -184,19 +175,22 @@ section#calendar {
 
 .item {
     position: relative;
-    flex-shrink: 0;
-    margin: 0 0 var(--length-m) 0;
+    /* flex-shrink: 0; */
+    margin-bottom: var(--length-m);
     background: linear-gradient(#0004, var(--theme-color-A), #0006);
-    ;
     overflow: hidden;
     border-radius: var(--length-2s);
     box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color);
     box-sizing: border-box;
     transition: all .2s ease-out;
+    aspect-ratio: 3 / 4;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    width: fit-content;
+    height: fit-content;
 
     &>.desp {
         position: absolute;
@@ -244,8 +238,8 @@ section#calendar {
 
     & .score {
         color: #000;
-        background-color: #fff6;
-        backdrop-filter: blur(20px) brightness(3.2);
+        background-color: #fffc;
+        backdrop-filter: brightness(3);
         top: 0;
         font-style: normal;
         left: unset;
@@ -271,10 +265,10 @@ input[type='radio'] {
     &+label {
         background-color: var(--theme-color-A);
         border-radius: var(--length-2s);
-        padding: var(--length-5s) var(--length-l);
+        padding: var(--length-5s) var(--length-2s);
         margin: 0;
         font-weight: normal;
-        font-size: var(--length-2l);
+        font-size: var(--length-l);
         transition: all .2s ease-out;
 
         &:hover {
@@ -285,7 +279,7 @@ input[type='radio'] {
 
     &:checked+label {
         background-color: var(--theme-color);
-        padding: var(--length-5s) var(--length-4l);
+        padding: var(--length-5s) var(--length-l);
         color: #fff;
         font-weight: bold;
     }
