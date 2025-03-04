@@ -7,8 +7,8 @@ const LSKeys = {
 const API = 'https://api.bgm.tv';
 
 // ["grid", "small", "common", "medium", "large"];
-const ImageQuality = 'medium';
-
+const CalendarImageQuality = 'large';
+const CollectionsImageQuality = 'medium';
 
 // VAR
 let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
@@ -53,7 +53,7 @@ async function initCalendar() { // Calendar
         for (const dayObj of arr) {
             if (dayObj['weekday']['id'] !== id) continue;
             // rander
-            calendarWrapperEle.innerHTML = dayObj['items'].map(obj => createItem(obj)).join('');
+            calendarWrapperEle.innerHTML = dayObj['items'].map(obj => createItem(obj, 0)).join('');
             break;
         }
     }
@@ -79,7 +79,7 @@ async function initCollections(isRefresh) { // Collections
         }
 
         // rander
-        collectionsWrapperEle.innerHTML = collectionsDataList[offset]['data'].map(obj => createItem(obj['subject'])).join('');
+        collectionsWrapperEle.innerHTML = collectionsDataList[offset]['data'].map(obj => createItem(obj['subject'], 1)).join('');
     }
 }
 
@@ -102,7 +102,8 @@ async function refreshUserData(isRandering) {
     }
 }
 
-function createItem(obj) {
+// calendar: 0, collections: 1
+function createItem(obj, itemType) {
     const score = obj['rating'] ? obj['rating']['score'] :
         obj['score'] ? obj['score'] : false;
 
@@ -111,7 +112,7 @@ function createItem(obj) {
     eleTitle += score ? `\n评分：${score}` : '';
 
     let res = `<a class="item" href="${obj['url'] ?? `http://bgm.tv/subject/${obj['id']}`}" title="${eleTitle}">
-    <img src="${obj['images'][ImageQuality]}" alt="${obj['url']}">
+    <img src="${obj['images'][[CalendarImageQuality, CollectionsImageQuality][itemType]]}" alt="${obj['url']}">
     <div class="desp">`;
 
     res += obj['name_cn'] && obj['name_cn'] !== obj['name']
