@@ -44,6 +44,7 @@ button {
     outline: 0;
     font-weight: bold;
     transition: all .2s ease-out;
+
     &#access_token_inupt {
         width: min(25vw, 300px);
     }
@@ -108,9 +109,11 @@ section.card {
         position: relative;
         width: 100%;
         box-sizing: border-box;
-        padding: var(--length-m);
+        padding: var(--length-m) var(--length-m) 0 var(--length-m);
 
         column-gap: var(--length-m);
+
+        display: grid;
 
         overflow: auto;
     }
@@ -119,43 +122,43 @@ section.card {
 
 @media (min-width: 1200px) {
     .items_container {
-        column-count: 8;
+        grid-template-columns: repeat(8, 1fr);
     }
 }
 
 @media (max-width: 1200px) {
     .items_container {
-        column-count: 7;
+        grid-template-columns: repeat(7, 1fr);
     }
 }
 
 @media (max-width: 1000px) {
     .items_container {
-        column-count: 6;
+        grid-template-columns: repeat(6, 1fr);
     }
 }
 
 @media (max-width: 800px) {
     .items_container {
-        column-count: 5;
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
 @media (max-width: 600px) {
     .items_container {
-        column-count: 4;
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 400px) {
     .items_container {
-        column-count: 3;
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 250px) {
     .items_container {
-        column-count: 2;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -175,9 +178,8 @@ section#calendar {
 
 .item {
     position: relative;
-    /* flex-shrink: 0; */
     margin-bottom: var(--length-m);
-    background: linear-gradient(#0004, var(--theme-color-A), #0006);
+    background: linear-gradient(var(--theme-color-A), #0006, var(--theme-color-A));
     overflow: hidden;
     border-radius: var(--length-2s);
     box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color);
