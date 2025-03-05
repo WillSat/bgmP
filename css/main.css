@@ -29,7 +29,6 @@
 body {
     margin: 0;
     font-family: PingFang SC, PingFang TC, Helvetica, sans-serif;
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
 
     background-color: var(--bg-color);
 }
@@ -114,65 +113,60 @@ section.card {
         column-gap: var(--length-m);
 
         display: grid;
+        /* grid-template-columns: repeat(auto-fill, 180px); */
+        /* justify-items: stretch;
+        align-items: stretch; */
 
         overflow: auto;
     }
 }
 
-
-@media (min-width: 1200px) {
+@media (min-width: 1560px) {
+    .items_container {
+        grid-template-columns: repeat(9, 1fr);
+    }
+}
+@media (max-width: 1560px) {
     .items_container {
         grid-template-columns: repeat(8, 1fr);
     }
 }
-
-@media (max-width: 1200px) {
+@media (max-width: 1360px) {
     .items_container {
         grid-template-columns: repeat(7, 1fr);
     }
 }
-
-@media (max-width: 1000px) {
+@media (max-width: 1160px) {
     .items_container {
         grid-template-columns: repeat(6, 1fr);
     }
 }
-
-@media (max-width: 800px) {
+@media (max-width: 960px) {
     .items_container {
         grid-template-columns: repeat(5, 1fr);
     }
 }
-
-@media (max-width: 600px) {
+@media (max-width: 760px) {
     .items_container {
         grid-template-columns: repeat(4, 1fr);
     }
 }
-
-@media (max-width: 400px) {
+@media (max-width: 560px) {
     .items_container {
         grid-template-columns: repeat(3, 1fr);
     }
 }
-
-@media (max-width: 250px) {
+@media (max-width: 360px) {
     .items_container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
-
 
 /* calendar */
 section#calendar {
     &>#calendar_bar {
         overflow: auto;
         gap: var(--length-m);
-
-        &>div {
-            flex-shrink: 0;
-        }
     }
 }
 
@@ -185,14 +179,14 @@ section#calendar {
     box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color);
     box-sizing: border-box;
     transition: all .2s ease-out;
-    aspect-ratio: 3 / 4;
+    height: fit-content;
+    min-height: 150px;
+    max-height: 260px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    width: fit-content;
-    height: fit-content;
 
     &>.desp {
         position: absolute;
@@ -218,7 +212,7 @@ section#calendar {
             text-align: start;
         }
 
-        &>br+.name {
+        &>.cnname+.name {
             font-size: var(--length-s);
             font-weight: bold;
         }

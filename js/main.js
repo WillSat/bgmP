@@ -8,12 +8,12 @@ const API = 'https://api.bgm.tv';
 
 // ["grid", "small", "common", "medium", "large"];
 const CalendarImageQuality = 'large';
-const CollectionsImageQuality = 'medium';
+const CollectionsImageQuality = 'common';
 
 // VAR
 let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
 let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
-const collectionsPreRequest = 30;
+const collectionsPreRequest = 100;
 const collectionsDataList = [];
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
@@ -70,17 +70,23 @@ async function initCollections(isRefresh) { // Collections
         // sign: exists but not be requested yet
         collectionsDataList[i + 1] = false;
     }
-    collectionsDataList[0]
-    await randerCollections(0);
 
-    async function randerCollections(offset) {
-        if (collectionsDataList[offset] || collectionsDataList[offset] === false) {
-            collectionsDataList[offset] = await request(`/v0/users/${userData['username']}/collections?limit=20&offset=${offset}`, 'GET', true);
-        }
-
-        // rander
-        collectionsWrapperEle.innerHTML = collectionsDataList[offset]['data'].map(obj => createItem(obj['subject'], 1)).join('');
+    // 
+    for (let i = 0; i < collectionsDataList.length; i++) {
+        await randerCollections(i);
     }
+    // await randerCollections(0);
+}
+
+async function randerCollections(offset, ifClear) {
+    if (!collectionsDataList[offset]) {
+        collectionsDataList[offset] = await request(`/v0/users/${userData['username']}/collections?limit=${collectionsPreRequest}&offset=${offset}`, 'GET', true);
+    }
+
+    if (ifClear) collectionsWrapperEle.innerHTML = '';
+    
+    // rander
+    collectionsWrapperEle.innerHTML += collectionsDataList[offset]['data'].map(obj => createItem(obj['subject'], 1)).join('');
 }
 
 // public fn
@@ -116,10 +122,10 @@ function createItem(obj, itemType) {
     <div class="desp">`;
 
     res += obj['name_cn'] && obj['name_cn'] !== obj['name']
-        ? `<span class="cnname">${obj['name_cn']}</span><br>` : '';
-    res += `<span class="name">${obj['name']}</span></div>`;
-    res += obj['rank'] ? `<span class="rank">${obj['rank']}</span>` : '';
-    res += score ? `<span class="score">${score}</span>` : '';
+        ? `<div class="cnname">${obj['name_cn']}</div>` : '';
+    res += `<div class="name">${obj['name']}</div></div>`;
+    res += obj['rank'] ? `<div class="rank">${obj['rank']}</div>` : '';
+    res += score ? `<div class="score">${score}</div>` : '';
     res += '</a>';
 
     return res;
