@@ -441,14 +441,12 @@ input[type='checkbox'] {
         transition: all .2s ease-out;
 
         &:hover {
-            background-color: var(--theme-color);
-            color: #fff;
+            transform: scale(1.1);
         }
     }
 
     &:checked+label {
         background-color: var(--theme-color);
-        padding: var(--length-5s) var(--length-l);
         color: #fff;
         font-weight: bold;
     }
