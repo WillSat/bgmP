@@ -15,8 +15,8 @@ const CollectionsImageQuality = 'grid';
 let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
 let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
 let cachedCheckedCollArr = JSON.parse(localStorage.getItem(LSKeys.displayCollectionsTypeArr)) ?? [3, 1];
+let collectionsDataList = [];
 const collectionsPreRequest = 100;
-const collectionsDataList = [];
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
 const collectionsWrapperEle = document.getElementById('collections_wrapper');
@@ -209,6 +209,7 @@ function createListItems(subject) {
         localStorage.setItem(LSKeys.bgmAccessToken, accessToken);
 
         // refresh
+        collectionsDataList = [];
         initCollections(true);
     })
 }
