@@ -7,6 +7,7 @@
     <base target="_blank">
     <title>bgmP</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/blur_layer.css">
 </head>
 
 <body>
@@ -24,7 +25,7 @@
     <!-- calendar -->
     <section id="calendar" class="card">
         <div id="calendar_bar" class="card_bar">
-            <span>排期</span>
+            <span>放送</span>
             <div>
                 <input type="radio" id="radio-mon" name="calendar-weekday" value="1">
                 <label for="radio-mon">一</label>
@@ -54,14 +55,45 @@
                 <label for="radio-sun">日</label>
             </div>
         </div>
-        <div id="calendar_wrapper" class="items_container"></div>
+        <div id="calendar_wrapper" class="image_items_container"></div>
     </section>
 
     <!-- collections -->
     <section id="collections" class="card">
-        <div id="collections_bar" class="card_bar"><span>收藏</span></div>
-        <div id="collections_wrapper" class="items_container"></div>
+        <div id="collections_bar" class="card_bar"><span>收藏</span>
+            <div>
+                <input type="checkbox" id="checkbox-a" name="collection-type" value="3">
+                <label for="checkbox-a">在看</label>
+            </div>
+            <div>
+                <input type="checkbox" id="checkbox-b" name="collection-type" value="1">
+                <label for="checkbox-b">想看</label>
+            </div>
+            <div>
+                <input type="checkbox" id="checkbox-c" name="collection-type" value="4">
+                <label for="checkbox-c">搁置</label>
+            </div>
+            <div>
+                <input type="checkbox" id="checkbox-d" name="collection-type" value="2">
+                <label for="checkbox-d">看过</label>
+            </div>
+            <div>
+                <input type="checkbox" id="checkbox-e" name="collection-type" value="5">
+                <label for="checkbox-e">抛弃</label>
+            </div>
+        </div>
+        <div id="collections_wrapper" class="list_items_container"></div>
     </section>
+
+    <div id="blur_layer">
+        <div id="box">
+            <div class="box_item" id="coll_a" value="3">移动到“在看”</div>
+            <div class="box_item" id="coll_b" value="1">移动到“想看”</div>
+            <div class="box_item" id="coll_c" value="4">移动到“搁置”</div>
+            <div class="box_item" id="coll_d" value="2">移动到“看过”</div>
+            <div class="box_item" id="coll_e" value="5">移动到“抛弃”</div>
+        </div>
+    </div>
 
     <script src="js/ua.js"></script>
     <script src="js/main.js"></script>
