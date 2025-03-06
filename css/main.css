@@ -439,10 +439,6 @@ input[type='checkbox'] {
         font-weight: normal;
         font-size: var(--length-l);
         transition: all .2s ease-out;
-
-        &:hover {
-            transform: scale(1.1);
-        }
     }
 
     &:checked+label {
