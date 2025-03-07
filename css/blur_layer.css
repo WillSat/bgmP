@@ -22,30 +22,38 @@
         opacity: 1;
     }
 
-    & > #box{
+    &>#box {
         position: relative;
         height: fit-content;
         padding: 0;
 
-        background-color: #ddd;
-        border-radius: 10px;
+        background-color: #cccc;
+        backdrop-filter: blur(20px);
+        border-radius: 8px;
 
         overflow: hidden;
 
         &>.box_item {
             -webkit-user-select: none;
             user-select: none;
-            height: 30px;
-            padding: 0 30px;
-            
+            height: fit-content;
+            padding: 3px 12px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            
+
             font-weight: bold;
 
-            & + .box_item {
+            &+.box_item {
                 border-top: var(--length-6s) solid var(--border-color);
+            }
+
+            &[value="5"] {
+                color: #a22;
+            }
+            &[value="0"] {
+                color: #26a;
             }
 
             /* border-radius: 6px; */

@@ -10,13 +10,14 @@ const baseUrl = 'https://api.bgm.tv';
 // ["grid", "small", "common", "medium", "large"];
 const CalendarImageQuality = 'large';
 const CollectionsImageQuality = 'grid';
+const collectionsPreRequest = 100;
 
 // VAR
 let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
 let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
 let cachedCheckedCollArr = JSON.parse(localStorage.getItem(LSKeys.displayCollectionsTypeArr)) ?? [3, 1];
+let calenderDataList = [];
 let collectionsDataList = [];
-const collectionsPreRequest = 100;
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
 const collectionsWrapperEle = document.getElementById('collections_wrapper');
@@ -27,40 +28,79 @@ initCollections();
 
 let selectedCollID;
 
+function buildStructData(id, name, nameCn, imgUrl, rank, score, playWeekDayCode, inCollType) {
+    return { id, name, nameCn, imgUrl, rank, score, playWeekDayCode, inCollType };
+}
+
 async function initCalendar() { // Calendar
-    const WeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
+    const todayWeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
     const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
 
-    let calenderData = await (await request('/calendar', 'GET', false)).json();
-    randerCalender(calenderData, WeekDay);
+    const resData = await (await request('/calendar', 'GET', false)).json();
+    for (const dayObj of resData) {
+        const dayCode = dayObj['weekday']['id'];
+        for (const items of dayObj['items']) {
+            calenderDataList.push(buildStructData(
+                items['id'], items['name'], items['name_cn'], items['images'][CalendarImageQuality], items['rank'], items['rating'] ? items['rating']['score'] : false, dayCode
+            ));
+        }
+    }
+
+    randerCalender(todayWeekDay);
 
     // switch event
     weekdayRadios.forEach(ele => {
-        if (WeekDay === +ele.value) {
+        if (todayWeekDay === +ele.value) {
             ele.checked = true;
         }
         ele.addEventListener('change', () => {
             for (const ele of weekdayRadios) {
                 if (ele.checked) {
-                    randerCalender(calenderData, +ele.value);
+                    randerCalender(+ele.value);
                     break;
                 }
             }
         })
     });
+}
 
-    function randerCalender(arr, id) {
-        if (arr.length === 0) {
-            console.error('Get calendar data failed!');
-            return;
-        }
+function randerCalender(dayCode) {
+    if (calenderDataList.length === 0) {
+        console.error('Get calendar data failed!');
+        return;
+    }
 
-        for (const dayObj of arr) {
-            if (dayObj['weekday']['id'] !== id) continue;
-            // rander
-            calendarWrapperEle.innerHTML = dayObj['items'].map(obj => createImageItems(obj)).join('');
-            break;
-        }
+    const tempArr = calenderDataList.filter(e => e.playWeekDayCode === dayCode);
+
+    // rander
+    calendarWrapperEle.innerHTML = tempArr.map(o => createImageItems(o)).join('');
+
+    // bind event
+    for (const a of document.querySelectorAll('a.image_items')) {
+        a.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            openCollOptionsMenu(+this.getAttribute('id'));
+        })
+    }
+
+    // const score = obj['rating'] ? obj['rating']['score'] : false;
+    function createImageItems(structData) {
+        let eleTitle = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`
+        eleTitle += structData.rank ? `\n排名：${structData.rank}` : '';
+        eleTitle += structData.score ? `\n评分：${structData.score}` : '';
+
+        let res = `<a class="image_items" href="http://bgm.tv/subject/${structData.id}" title="${eleTitle}" id="${structData.id}">
+        <img src="${structData.imgUrl}" alt="${structData.imgUrl}">
+        <div class="desp">`;
+
+        res += structData.nameCn && structData.nameCn !== structData.name
+            ? `<div class="cnname">${structData.nameCn}</div>` : '';
+        res += `<div class="name">${structData.name}</div></div>`;
+        res += structData.rank ? `<div class="rank">${structData.rank}</div>` : '';
+        res += structData.score ? `<div class="score">${structData.score}</div>` : '';
+        res += '</a>';
+
+        return res;
     }
 }
 
@@ -74,18 +114,27 @@ async function initCollections(isRefresh) {
     if (!userData || isRefresh) await refreshUserData();
     const firstResqust = await ((await request(`/v0/users/${userData['username']}/collections?limit=${collectionsPreRequest}&offset=0`, 'GET', true)).json());
 
-    const totalPages = Math.ceil(firstResqust['total'] / collectionsPreRequest);
-    collectionsDataList.push(...firstResqust['data']);
+    pushData(firstResqust['data']);
 
+    const totalPages = Math.ceil(firstResqust['total'] / collectionsPreRequest);
     for (let offset = 1; offset < totalPages; offset++) {
-        const res = (await (await request(`/v0/users/${userData['username']}/collections?limit=${collectionsPreRequest}&offset=${offset * collectionsPreRequest}`, 'GET', true)).json())['data'];
-        collectionsDataList.push(...res);
+        const res = await (await request(`/v0/users/${userData['username']}/collections?limit=${collectionsPreRequest}&offset=${offset * collectionsPreRequest}`, 'GET', true)).json();
+
+        pushData(res['data']);
+    }
+
+    function pushData(rawArr) {
+        for (const obj of rawArr) {
+            const subject = obj['subject'];
+            collectionsDataList.push(buildStructData(
+                subject['id'], subject['name'], subject['name_cn'], subject['images'][CollectionsImageQuality], subject['rank'], subject['score'], undefined, obj['type']
+            ));
+        }
     }
 
     // init
     const collectionType = document.querySelectorAll('input[name="collection-type"]');
 
-    
     randerCollections(cachedCheckedCollArr);
     for (const ele of collectionType) {
         if (cachedCheckedCollArr.includes(+ele.value)) ele.checked = true;
@@ -113,22 +162,56 @@ function randerCollections(typeArr) {
         collectionsWrapperEle.innerHTML += `<div class="list_subtitle">${subtitle}</div><div class="list_group">${children}</div>`;
 
     for (const type of typeArr) {
-        randerGroup([null, '想看', '看过', '在看', '搁置', '抛弃'][type],
-            collectionsDataList.filter(e => e['type'] === type).map(obj => createListItems(obj['subject'])).join('')
+        randerGroup(
+            [null, '想看', '看过', '在看', '搁置', '抛弃'][type],
+            collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj)).join('')
         );
     }
 
+    // bind event
     for (const a of document.querySelectorAll('a.list_items')) {
         a.addEventListener('contextmenu', function (e) {
             e.preventDefault();
-            openCollMenu(this.getAttribute('collitemid'));
+            openCollOptionsMenu(+this.getAttribute('collitemid'));
         })
+    }
+
+    function createListItems(structData) {
+        const quality = structData.score ? structData.score < 7 ? 'normal' : structData.score < 8 ? 'high' : 'ex-high' : 'none';
+        let eleTitle = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`
+        eleTitle += structData.rank ? `\n排名：${structData.rank}` : '';
+        eleTitle += structData.score ? `\n评分：${structData.score}` : '';
+
+        let res = `<a class="list_items" href="http://bgm.tv/subject/${structData.id}" title="${eleTitle}" quality="${quality}" collitemid="${structData.id}">
+        <img src="${structData.imgUrl}" alt="${structData.id}">
+        <div class="desp">`;
+
+        res += structData.nameCn && structData.nameCn !== structData.name
+            ? `<div class="cnname">${structData.nameCn}</div>` : '';
+        res += `<div class="name">${structData.name}</div></div>`;
+
+        res += '<div class="tail">';
+        res += structData.rank ? `<div class="rank">${structData.rank}</div>` : '';
+        res += structData.score ? `<div class="score">${structData.score}</div>` : '';
+        res += '</div>';
+        res += '</a>';
+
+        return res;
     }
 }
 
-function openCollMenu(itemID) {
+function openCollOptionsMenu(itemID) {
+    ifSelectedCollInCollections = collectionsDataList.some(e => e.id === itemID);
+    selectedCollID = itemID;
     blurLayer.classList.add('open');
-    selectedCollID = +itemID;
+    
+    window.menu_timer = setTimeout(closeCollOptionsMenu, 60 * 1000);
+}
+
+function closeCollOptionsMenu() {
+    blurLayer.classList.remove('open');
+    selectedCollID = null;
+    if (window.menu_timer) clearTimeout(window.menu_timer);
 }
 
 // public fn
@@ -153,50 +236,6 @@ async function refreshUserData(isRandering) {
     }
 }
 
-function createImageItems(obj) {
-    const score = obj['rating'] ? obj['rating']['score'] : false;
-
-    let eleTitle = `${obj['name_cn'] ? obj['name_cn'] + '\n' : ''}${obj['name']}\nID: ${obj['id']}`
-    eleTitle += obj['rank'] ? `\n排名：${obj['rank']}` : '';
-    eleTitle += score ? `\n评分：${score}` : '';
-
-    let res = `<a class="image_items" href="${obj['url'] ?? `http://bgm.tv/subject/${obj['id']}`}" title="${eleTitle}">
-    <img src="${obj['images'][CalendarImageQuality]}" alt="${obj['url']}">
-    <div class="desp">`;
-
-    res += obj['name_cn'] && obj['name_cn'] !== obj['name']
-        ? `<div class="cnname">${obj['name_cn']}</div>` : '';
-    res += `<div class="name">${obj['name']}</div></div>`;
-    res += obj['rank'] ? `<div class="rank">${obj['rank']}</div>` : '';
-    res += score ? `<div class="score">${score}</div>` : '';
-    res += '</a>';
-
-    return res;
-}
-
-function createListItems(subject) {
-    const quality = subject['score'] ? subject['score'] < 7 ? 'normal' : subject['score'] < 8 ? 'high' : 'ex-high' : 'none';
-    let eleTitle = `${subject['name_cn'] ? subject['name_cn'] + '\n' : ''}${subject['name']}\nID: ${subject['id']}`
-    eleTitle += subject['rank'] ? `\n排名：${subject['rank']}` : '';
-    eleTitle += subject['score'] ? `\n评分：${subject['score']}` : '';
-
-    let res = `<a class="list_items" href="${subject['url'] ?? `http://bgm.tv/subject/${subject['id']}`}" title="${eleTitle}" quality="${quality}" collitemid="${subject['id']}">
-    <img src="${subject['images'][CollectionsImageQuality]}" alt="${subject['url']}">
-    <div class="desp">`;
-
-    res += subject['name_cn'] && subject['name_cn'] !== subject['name']
-        ? `<div class="cnname">${subject['name_cn']}</div>` : '';
-    res += `<div class="name">${subject['name']}</div></div>`;
-
-    res += '<div class="tail">';
-    res += subject['rank'] ? `<div class="rank">${subject['rank']}</div>` : '';
-    res += subject['score'] ? `<div class="score">${subject['score']}</div>` : '';
-    res += '</div>';
-    res += '</a>';
-
-    return res;
-}
-
 { // Access Token
     const input = document.getElementById('access_token_inupt');
     // init
@@ -215,13 +254,19 @@ function createListItems(subject) {
 }
 
 {
-    blurLayer.addEventListener('click', () => {
-        blurLayer.classList.remove('open');
-    });
+    blurLayer.addEventListener('click', closeCollOptionsMenu);
 
     for (const ele of document.querySelectorAll('.box_item')) {
         ele.addEventListener('click', async function (e) {
+            e.stopPropagation();
             if (!selectedCollID) return;
+
+            // 0: open in bgm.tv
+            if (+this.getAttribute('value') === 0) {
+                window.open(`https://bgm.tv/subject/${selectedCollID}`);
+                return;
+            }
+
             try {
                 await request(
                     `/v0/users/-/collections/${selectedCollID}`,
@@ -229,16 +274,22 @@ function createListItems(subject) {
                     { type: +this.getAttribute('value') }
                 );
 
-                for (let i = 0; i < collectionsDataList.length; i++) {
-                    if (collectionsDataList[i]['subject_id'] === selectedCollID) {
-                        collectionsDataList[i]['type'] = +this.getAttribute('value');
-                        randerCollections(cachedCheckedCollArr);
-                        break;
-                    }
+                const ii = collectionsDataList.findIndex(item => item.id === selectedCollID);
+                if (ii !== -1) {
+                    collectionsDataList[ii].inCollType = +this.getAttribute('value');
+                    randerCollections(cachedCheckedCollArr);
+                } else {
+                    const index = calenderDataList.findIndex(item => item.id === selectedCollID);
+                    calenderDataList[index].inCollType = +this.getAttribute('value');
+                    collectionsDataList.push(calenderDataList[index]);
+                    randerCollections(cachedCheckedCollArr);
                 }
+
             } catch (error) {
                 console.error(error);
             }
+
+            closeCollOptionsMenu();
         })
     }
 }
