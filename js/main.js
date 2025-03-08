@@ -84,38 +84,6 @@ function randerCalender(dayCode) {
             e.preventDefault();
             openCollOptionsMenu(a.bgmID);
         })
-
-        a.addEventListener('touchstart', function (e) {
-            e.preventDefault();
-            a.long_press_timer = setTimeout(() => {
-                openCollOptionsMenu(this.bgmID);
-            }, 500);
-
-            // scroll event
-            a.addEventListener('touchmove', cancelLongPress);
-
-            // cancel event
-            a.addEventListener('touchcancel', cancelLongPress);
-
-            // tap event
-            a.addEventListener('touchend', tap);
-
-            function tap() {
-                window.open(a.href);
-                removeEvents();
-            }
-
-            function cancelLongPress() {
-                clearTimeout(a.long_press_timer);
-                removeEvents();
-            }
-
-            function removeEvents() {
-                a.removeEventListener('touchmove', cancelLongPress);
-                a.removeEventListener('touchcancel', cancelLongPress);
-                a.removeEventListener('touchend', tap);
-            }
-        });
     }
 
     // const score = obj['rating'] ? obj['rating']['score'] : false;
@@ -207,38 +175,6 @@ async function initCollections(isRefresh) {
             cachedCheckedCollArr = checkedTypeArr;
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
         })
-
-        a.addEventListener('touchstart', function (e) {
-            e.preventDefault();
-            a.long_press_timer = setTimeout(() => {
-                openCollOptionsMenu(a.bgmID);
-            }, 500);
-
-            // scroll event
-            a.addEventListener('touchmove', cancelLongPress);
-
-            // cancel event
-            a.addEventListener('touchcancel', cancelLongPress);
-
-            // tap event
-            a.addEventListener('touchend', tap);
-
-            function tap() {
-                window.open(a.href);
-                removeEvents();
-            }
-
-            function cancelLongPress() {
-                clearTimeout(a.long_press_timer);
-                removeEvents();
-            }
-
-            function removeEvents() {
-                a.removeEventListener('touchmove', cancelLongPress);
-                a.removeEventListener('touchcancel', cancelLongPress);
-                a.removeEventListener('touchend', tap);
-            }
-        });
     });
 }
 
