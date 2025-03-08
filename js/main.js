@@ -73,14 +73,49 @@ function randerCalender(dayCode) {
     const tempArr = calenderDataList.filter(e => e.playWeekDayCode === dayCode);
 
     // rander
-    calendarWrapperEle.innerHTML = tempArr.map(o => createImageItems(o)).join('');
+    calendarWrapperEle.innerHTML = '';
+    for (const o of tempArr) {
+        calendarWrapperEle.appendChild(createImageItems(o));
+    }
 
     // bind event
     for (const a of document.querySelectorAll('a.image_items')) {
         a.addEventListener('contextmenu', function (e) {
             e.preventDefault();
-            openCollOptionsMenu(+this.getAttribute('id'));
+            openCollOptionsMenu(a.bgmID);
         })
+
+        a.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            a.long_press_timer = setTimeout(() => {
+                openCollOptionsMenu(this.bgmID);
+            }, 500);
+
+            // scroll event
+            a.addEventListener('touchmove', cancelLongPress);
+
+            // cancel event
+            a.addEventListener('touchcancel', cancelLongPress);
+
+            // tap event
+            a.addEventListener('touchend', tap);
+
+            function tap() {
+                window.open(a.href);
+                removeEvents();
+            }
+
+            function cancelLongPress() {
+                clearTimeout(a.long_press_timer);
+                removeEvents();
+            }
+
+            function removeEvents() {
+                a.removeEventListener('touchmove', cancelLongPress);
+                a.removeEventListener('touchcancel', cancelLongPress);
+                a.removeEventListener('touchend', tap);
+            }
+        });
     }
 
     // const score = obj['rating'] ? obj['rating']['score'] : false;
@@ -89,18 +124,38 @@ function randerCalender(dayCode) {
         eleTitle += structData.rank ? `\n排名：${structData.rank}` : '';
         eleTitle += structData.score ? `\n评分：${structData.score}` : '';
 
-        let res = `<a class="image_items" href="http://bgm.tv/subject/${structData.id}" title="${eleTitle}" id="${structData.id}">
-        <img src="${structData.imgUrl}" alt="${structData.imgUrl}">
-        <div class="desp">`;
+        const aEle = document.createElement('a');
+        aEle.classList.add('image_items');
+        aEle.href = `http://bgm.tv/subject/${structData.id}`;
+        aEle.title = eleTitle;
+        aEle.bgmID = structData.id;
 
-        res += structData.nameCn && structData.nameCn !== structData.name
+        const imgEle = document.createElement('img');
+        imgEle.src = structData.imgUrl;
+        imgEle.alt = structData.id;
+        aEle.appendChild(imgEle);
+
+        const despEle = document.createElement('div');
+        despEle.classList.add('desp');
+        despEle.innerHTML = structData.nameCn && structData.nameCn !== structData.name
             ? `<div class="cnname">${structData.nameCn}</div>` : '';
-        res += `<div class="name">${structData.name}</div></div>`;
-        res += structData.rank ? `<div class="rank">${structData.rank}</div>` : '';
-        res += structData.score ? `<div class="score">${structData.score}</div>` : '';
-        res += '</a>';
+        despEle.innerHTML += `<div class="name">${structData.name}</div>`;
+        aEle.appendChild(despEle);
 
-        return res;
+        if (structData.rank) {
+            const rankEle = document.createElement('div');
+            rankEle.classList.add('rank');
+            rankEle.innerHTML = structData.rank;
+            aEle.appendChild(rankEle);
+        }
+
+        if (structData.score) {
+            const scoreEle = document.createElement('div');
+            scoreEle.classList.add('score');
+            scoreEle.innerHTML = structData.score;
+            aEle.appendChild(scoreEle);
+        }
+        return aEle;
     }
 }
 
@@ -142,8 +197,8 @@ async function initCollections(isRefresh) {
     }
 
     // change event
-    collectionType.forEach(ele => {
-        ele.addEventListener('change', () => {
+    collectionType.forEach(a => {
+        a.addEventListener('change', () => {
             const checkedTypeArr = [];
             for (const ele of collectionType) {
                 if (ele.checked) checkedTypeArr.push(+ele.value);
@@ -152,51 +207,122 @@ async function initCollections(isRefresh) {
             cachedCheckedCollArr = checkedTypeArr;
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
         })
+
+        a.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            a.long_press_timer = setTimeout(() => {
+                openCollOptionsMenu(a.bgmID);
+            }, 500);
+
+            // scroll event
+            a.addEventListener('touchmove', cancelLongPress);
+
+            // cancel event
+            a.addEventListener('touchcancel', cancelLongPress);
+
+            // tap event
+            a.addEventListener('touchend', tap);
+
+            function tap() {
+                window.open(a.href);
+                removeEvents();
+            }
+
+            function cancelLongPress() {
+                clearTimeout(a.long_press_timer);
+                removeEvents();
+            }
+
+            function removeEvents() {
+                a.removeEventListener('touchmove', cancelLongPress);
+                a.removeEventListener('touchcancel', cancelLongPress);
+                a.removeEventListener('touchend', tap);
+            }
+        });
     });
 }
 
 function randerCollections(typeArr) {
     collectionsWrapperEle.innerHTML = '';
 
-    const randerGroup = (subtitle, children) =>
-        collectionsWrapperEle.innerHTML += `<div class="list_subtitle">${subtitle}</div><div class="list_group">${children}</div>`;
+    const randerGroup = (subtitle, children) => {
+        const subtitleEle = document.createElement('div');
+        subtitleEle.classList.add('list_subtitle');
+        subtitleEle.innerHTML = subtitle;
+        collectionsWrapperEle.appendChild(subtitleEle);
 
+        const groupEle = document.createElement('div');
+        groupEle.classList.add('list_group');
+        for (const o of children) {
+            groupEle.appendChild(o);
+        }
+        collectionsWrapperEle.appendChild(groupEle);
+    }
+
+    // rander
     for (const type of typeArr) {
         randerGroup(
             [null, '想看', '看过', '在看', '搁置', '抛弃'][type],
-            collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj)).join('')
+            collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj))
         );
     }
 
     // bind event
     for (const a of document.querySelectorAll('a.list_items')) {
-        a.addEventListener('contextmenu', function (e) {
+        a.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            openCollOptionsMenu(+this.getAttribute('collitemid'));
+            openCollOptionsMenu(a.bgmID);
         })
     }
 
     function createListItems(structData) {
         const quality = structData.score ? structData.score < 7 ? 'normal' : structData.score < 8 ? 'high' : 'ex-high' : 'none';
-        let eleTitle = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`
-        eleTitle += structData.rank ? `\n排名：${structData.rank}` : '';
-        eleTitle += structData.score ? `\n评分：${structData.score}` : '';
 
-        let res = `<a class="list_items" href="http://bgm.tv/subject/${structData.id}" title="${eleTitle}" quality="${quality}" collitemid="${structData.id}">
-        <img src="${structData.imgUrl}" alt="${structData.id}">
-        <div class="desp">`;
+        const eleTitle = [`${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`];
+        eleTitle.push(structData.rank ? `\n排名：${structData.rank}` : '');
+        eleTitle.push(structData.score ? `\n评分：${structData.score}` : '');
 
-        res += structData.nameCn && structData.nameCn !== structData.name
+        const aEle = document.createElement('a');
+        aEle.classList.add('list_items');
+        aEle.setAttribute('quality', quality);
+        aEle.href = `http://bgm.tv/subject/${structData.id}`;
+        aEle.title = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`;
+        aEle.bgmID = structData.id;
+
+        const imgEle = document.createElement('img');
+        imgEle.src = structData.imgUrl;
+        imgEle.alt = structData.id;
+        aEle.appendChild(imgEle);
+
+        const despEle = document.createElement('div');
+        despEle.classList.add('desp');
+        despEle.innerHTML = structData.nameCn && structData.nameCn !== structData.name
             ? `<div class="cnname">${structData.nameCn}</div>` : '';
-        res += `<div class="name">${structData.name}</div></div>`;
+        despEle.innerHTML += `<div class="name">${structData.name}</div></div>`;
+        aEle.appendChild(despEle);
 
-        res += '<div class="tail">';
-        res += structData.rank ? `<div class="rank">${structData.rank}</div>` : '';
-        res += structData.score ? `<div class="score">${structData.score}</div>` : '';
-        res += '</div>';
-        res += '</a>';
+        if (structData.rank || structData.rank) {
+            const tailEle = document.createElement('div');
+            tailEle.classList.add('tail');
 
-        return res;
+            if (structData.rank) {
+                const rankEle = document.createElement('div');
+                rankEle.classList.add('rank');
+                rankEle.innerHTML = structData.rank;
+                tailEle.appendChild(rankEle);
+            }
+            
+            if (structData.score) {
+                const scoreEle = document.createElement('div');
+                scoreEle.classList.add('score');
+                scoreEle.innerHTML = structData.score;
+                tailEle.appendChild(scoreEle);
+            }
+
+            aEle.appendChild(tailEle);
+        }
+
+        return aEle;
     }
 }
 
@@ -204,7 +330,7 @@ function openCollOptionsMenu(itemID) {
     ifSelectedCollInCollections = collectionsDataList.some(e => e.id === itemID);
     selectedCollID = itemID;
     blurLayer.classList.add('open');
-    
+
     window.menu_timer = setTimeout(closeCollOptionsMenu, 60 * 1000);
 }
 
