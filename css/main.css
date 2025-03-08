@@ -294,6 +294,16 @@ section.card {
         }
     }
 
+    @media (max-width: 580px) {
+        &>.desp {
+            font-size: var(--length-m);
+            
+            &>.cnname+.name {
+                font-size: var(--length-s);
+            }
+        }
+    }
+
     & .rank,
     & .score {
         position: absolute;
