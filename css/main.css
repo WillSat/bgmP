@@ -279,7 +279,10 @@ section.card {
         text-overflow: ellipsis;
         text-shadow: 0 0 var(--length-3s) var(--text-shadow-color);
         background: linear-gradient(#0000, #0006);
+        /*  */
         backdrop-filter: blur(18px);
+        transform: translateZ(0);
+        /*  */
         color: #fff;
         font-weight: bold;
 
@@ -311,8 +314,11 @@ section.card {
 
     & .score {
         color: #000;
-        background-color: #fffc;
-        backdrop-filter: brightness(3);
+        background-color: #fffa;
+        /*  */
+        backdrop-filter: blur(18px) brightness(3);
+        transform: translateZ(0);
+        /*  */
         top: 0;
         font-style: normal;
         left: unset;
