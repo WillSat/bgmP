@@ -184,9 +184,10 @@ function randerCollections(typeArr) {
 
     // rander
     for (const type of typeArr) {
+        const tempArr = collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj));
         randerGroup(
-            [null, '想看', '看过', '在看', '搁置', '抛弃'][type],
-            collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj)),
+            `${[null, '想看', '看过', '在看', '搁置', '抛弃'][type]} · ${tempArr.length}`,
+            tempArr,
             collectionsWrapperEle
         );
     }
@@ -368,7 +369,7 @@ async function refreshUserData(isRandering) {
     function openSearchResult(children) {
         searchResultsWrapper.innerHTML = '';
 
-        randerGroup(`<span>“${input.value}” · ${children.length} 条结果</span><img class="close_btn" src="img/close.svg">`, children, searchResultsWrapper);
+        randerGroup(`<span>“${input.value}” · ${children.length}</span><img class="close_btn" src="img/close.svg">`, children, searchResultsWrapper);
         searchResultsWrapper.querySelector('.close_btn').addEventListener('click', closeSearchResult);
 
         // bind contextmenu event
@@ -380,7 +381,7 @@ async function refreshUserData(isRandering) {
         }
 
         searchResultsCard.classList.remove('hidden');
-        setTimeout(() => searchResultsCard.classList.remove('close'));
+        setTimeout(() => searchResultsCard.classList.remove('close'), 100);
     }
 
     function closeSearchResult() {
@@ -389,10 +390,15 @@ async function refreshUserData(isRandering) {
         setTimeout(() => {
             searchResultsCard.classList.add('hidden');
             searchResultsWrapper.innerHTML = '';
-        }, 200);
+        }, 600);
     }
 
     btn.addEventListener('click', () => {
+        if (!input.value) {
+            input.focus();
+            return;
+        }
+    
         request(
             `/search/subject/${input.value}?type=2&responseGroup=large&max_results=${SearchResultPreRequest}`,
             'GET',

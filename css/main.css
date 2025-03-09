@@ -274,26 +274,27 @@ section.card {
         left: 0;
         font-size: var(--length-l);
         text-align: center;
-        padding: 0 var(--length-6s);
+        padding: var(--length-l) var(--length-6s) 0 var(--length-6s);
         box-sizing: border-box;
         max-height: 80%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         text-shadow: 0 0 var(--length-3s) var(--text-shadow-color);
-        background: linear-gradient(#0004, #0008);
-        /*  */
-        backdrop-filter: blur(18px);
-        transform: translateZ(0);
-        /*  */
+        background: linear-gradient(#0000, #000c);
         color: #fff;
         font-weight: bold;
 
         cursor: none;
 
+        transition: all .2s ease-out;
+
         &:hover {
             white-space: unset;
             text-align: start;
+            backdrop-filter: blur(20px);
+            padding: 0 var(--length-6s);
+            background: linear-gradient(#0002, #000a);
         }
 
         &>.cnname+.name {
@@ -328,11 +329,7 @@ section.card {
 
     & .score {
         color: #000;
-        background-color: #fffb;
-        /*  */
-        backdrop-filter: blur(18px) brightness(2);
-        transform: translateZ(0);
-        /*  */
+        background-color: #fffc;
         top: 0;
         font-style: normal;
         left: unset;

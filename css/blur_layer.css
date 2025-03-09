@@ -9,8 +9,8 @@
     width: 100%;
     height: 100%;
 
-    background-color: #0006;
-    backdrop-filter: blur(4px);
+    background-color: #0008;
+    /* backdrop-filter: blur(2px); */
     transition: .1s ease-out;
 
     display: flex;
@@ -26,8 +26,8 @@
         position: relative;
         height: fit-content;
 
-        background-color: #cccc;
-        backdrop-filter: blur(20px);
+        background-color: #fff8;
+        backdrop-filter: blur(50px) brightness(1.1);
         border-radius: 8px;
 
         overflow: hidden;
@@ -61,7 +61,7 @@
         /* border-radius: 6px; */
 
         &:hover {
-            background-color: #fff;
+            background-color: #fffa;
         }
     }
 }
