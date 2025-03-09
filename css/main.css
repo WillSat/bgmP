@@ -35,6 +35,10 @@ body {
     background-color: var(--bg-color);
 }
 
+* {
+    cursor: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzJweCIgaGVpZ2h0PSIzMnB4Ij48aW1hZ2UgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEQUFBQUF3Q0FZQUFBQlhBdm1IQUFBRS8wbEVRVlJvUSsyWVhVaGJaeHpHbjlUcFpyU2RPaE5UVERvUkM2TlF0cXVhVmpMQmxqS0VTVW5aU2lSaWRHVU9jWVhaMFN2TnB1aEZHVlJoZXBOVk9oVVJzZ1lyS0s2YkR2SENsb3BiTVlpSWsyYmhYT2ptUjB6TTdOU1o4WVJ6WE9xaWhtRThGZkxBU3o3ZWcvNS83Ly9qZVZXQkl5N0ZFWS8vUHdCeEFJNkppd29BMkFwWkw1MGtBTDR5NkhndW04MTJTcVBSS0l1S2ltWUIvQTFnQThDbStKNGdCSHNwSkFIdzVCbThjbTV1cmlZakkrT3pRQ0FROFBsOFR3UkJlR0MxV2gwT2gyTVp3SG9ZR0ZrbEFURDR4SHYzN3IxdHNWaEdtcHViTVRZMmhwS1NFbHkrZkpuNzY0dUxpdytucDZkN1RDYlRENElncklrd0JPR1NyY1FrZ0ZjQkpMVzJ0cDZyckt3Y3FLaW9nTTFtQzI1a1ptYkNZckVFVjA1T0RqWTJOaFlYRmhiNkhqOStmTjlvTkk0QitDc2tLeExNb1pWWUtNQnhBR3FmenpmdzlPblRVd2FEUWR6NlYzbDVlU2dySzhPMWE5ZVFuSnlNdGJXMVh3VkI2R2x2YjdjM05qYit0a3VKUlJVbUZDQ1pBQ01qSXpjTUJzTW4yZG5aZVBic21iajlvcEtTa25EMTZ0VWdUSDUrUGhRS3haYlg2eDF6dVZ5Tyt2cjZCdzZIWXlrTVRGUkFKSUJYR0JjQTFjV0xGOThhSEJ6c2JXaG9PRlpiV3l0dTd5NkNscGFXQm1GME9oMjJ0cmFlTHkwdERjN016SHhYVWxMeS9lenM3SjhoTUFjT0lRRndoQ1lDU0FXZ2NibGNMZkh4OGJsYXJSYUJRR1MvVTZGUW9LQ2dJQWhpTkJxUm1KaUl6YzNOK2FhbXB2ZHUzYnJGY2Z4Y2hEaFFTUUJVQW9EWG1ZWE96czRQekdiemw1Y3VYY0xRME5EMkE1R0svV0UybTNIbnpoMTR2ZDV1alVaekE4Q3EyUENSblVpRUNnV2dGN0NNM2xDcFZGcEJFUHJ0ZHZ0eGp0TC9vNFNFQkV4TlRlSEVpUk5ES3BXS1AyUUZBTWR2MUFENC9qVUFLUUF5SmlZbTZrNmZQbDJVbnA0T3Y5Ky8vZEJ1U2sxTmhWNnZ4NFVMRjNEKy9Ibms1dWF5ak5ZN09qbytLaTh2L3dtQUo5b0FGQTJONDFSVlcxdHJxSyt2LytiNjlldG9hMnZiZmtDU1VxbUV5V1FLQnN6QXo1dzVFL3grZFhWMTJlMTJUODdNelB4ODkrN2RoMzE5ZmF4L3VyZzMyaVZFc1ptVkxDTTJzOGZqdWU5ME9yWGhQT0hLbFN2bzZlbGh3QjZYeXpVMU9UazUwZHZiKzB0M2R6ZjlnQTNMdFBuRXdGbi9QUDJvTnJFa2xoR2JXVDA4UEZ5Vm41Ly9jVGhQYUdwcVFsVlYxVVpLU29yRjcvZXpQS1FnT1RJSndNWFBmSlhjK3NEdlR1RUE2QWswdGZTOVBHRjhmQnhxdGRxcDAraytCMERqNGtsTEFBeFdXalN4cUYzOHdnRzg0QWx1dDdzMUxpN3VYS2duY0V5dXJLeGdkSFMwMDJBd2ZBM2dqNUFhRHczNDBLNFNPN1h0Q1YxZFhSOFdGeGQvRWVvSmhZV0Y2Ty92WnhsOVdsMWQvU09BQmJIZWVlSUgycVQ3S1Z3R3FKMmVNR0MzMjVNa1Q3aDkrelp1M3J5NXJsS3BDcGFYbHdVQWl3QjRaWWhLbWV5bDNRRDR2ZVFKR3FmVFdaZVRrL08rNUFtUEhqMUNWbGJXeE1tVEp5MEE1c1F4eVdZOWRPMEdRRzE3UWwxZDNidFdxOVZXV1ZtSmpvNE9lRHdlTnZHM2VyMytLd0MvaXk1NzRDTXlFdTBGSUhrQ3M2Q2VuNTl2UzB0TGU0ZlhnN05uejI3VjFOUVVOelkyUGhITGh6T2ZqWHZvMmd1QWt2NU9TTlhyOWRxV2xoYUxXcTErYzJCZzRINUZSUVd2QjlMNFpQa2Nhdk5LMmcrQXpjeGVJQVFYeHlzenczRko0K0ppODhwU1B0UitBTnluc1RFVFhPd0xmc2R5SVFSUG5zRWYrdlFKRFhBLzhSbG1RdnFuRno4ejRLZzZiS1NLQkVEU3ptZGxxZm1kMmhuVWtWTU1RRzdGTWlDM1lobVFXN0VNeUsxWUJ1UldMQU55SzVZQnVSWExnTnlLWlVCdS9RTjV6K2xBTkFRYkVBQUFBQUJKUlU1RXJrSmdnZz09IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiLz48L3N2Zz4=) 2 2, auto !important;
+}
+
 a {
     -webkit-user-select: none;
     user-select: none;
@@ -274,26 +278,25 @@ section.card {
         left: 0;
         font-size: var(--length-l);
         text-align: center;
-        padding: var(--length-l) var(--length-6s) 0 var(--length-6s);
+        padding: 0 var(--length-6s);
         box-sizing: border-box;
         max-height: 80%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         text-shadow: 0 0 var(--length-3s) var(--text-shadow-color);
-        background: linear-gradient(#0000, #000c);
+        background: linear-gradient(#0004, #000c);
         color: #fff;
         font-weight: bold;
 
         cursor: none;
 
-        transition: backdrop-filter .2s ease-out, background .2s ease-out;
+        transition: all .2s ease-out;
 
         &:hover {
             white-space: unset;
             text-align: start;
             backdrop-filter: blur(20px);
-            padding: 0 var(--length-6s);
             background: linear-gradient(#0002, #000a);
         }
 
@@ -306,7 +309,7 @@ section.card {
     @media (max-width: 580px) {
         &>.desp {
             font-size: var(--length-m);
-            
+
             &>.cnname+.name {
                 font-size: var(--length-s);
             }
@@ -357,12 +360,12 @@ section.card {
     overflow: hidden;
     border-radius: var(--length-3s);
     text-decoration: none;
-    
+
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    
+
     transition: all .2s ease-out;
 
     /* normal */
