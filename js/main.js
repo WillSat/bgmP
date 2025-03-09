@@ -33,6 +33,11 @@ function buildStructData(id, name, nameCn, imgUrl, rank, score, playWeekDayCode,
     return { id, name, nameCn, imgUrl, rank, score, playWeekDayCode, inCollType };
 }
 
+function sortStructData(a, b) {
+    if (a.rank && b.rank) return a.rank > b.rank;
+    else return b.rank;
+}
+
 async function initCalendar() { // Calendar
     const todayWeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
     const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
@@ -71,7 +76,7 @@ function randerCalender(dayCode) {
         return;
     }
 
-    const tempArr = calenderDataList.filter(e => e.playWeekDayCode === dayCode);
+    const tempArr = calenderDataList.filter(e => e.playWeekDayCode === dayCode).toSorted(sortStructData);
 
     // rander
     calendarWrapperEle.innerHTML = '';
@@ -184,7 +189,7 @@ function randerCollections(typeArr) {
 
     // rander
     for (const type of typeArr) {
-        const tempArr = collectionsDataList.filter(e => e.inCollType === type).map(obj => createListItems(obj));
+        const tempArr = collectionsDataList.filter(e => e.inCollType === type).toSorted(sortStructData).map(obj => createListItems(obj));
         randerGroup(
             `${[null, '想看', '看过', '在看', '搁置', '抛弃'][type]} · ${tempArr.length}`,
             tempArr,
@@ -398,7 +403,7 @@ async function refreshUserData(isRandering) {
             input.focus();
             return;
         }
-    
+
         request(
             `/search/subject/${input.value}?type=2&responseGroup=large&max_results=${SearchResultPreRequest}`,
             'GET',
