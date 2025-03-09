@@ -1,4 +1,4 @@
-#blur_layer {
+.blur_layer {
     pointer-events: none;
     z-index: 10;
     opacity: 0;
@@ -22,45 +22,46 @@
         opacity: 1;
     }
 
-    &>#box {
+    &>.box {
         position: relative;
         height: fit-content;
-        padding: 0;
 
         background-color: #cccc;
         backdrop-filter: blur(20px);
         border-radius: 8px;
 
         overflow: hidden;
+    }
+}
 
-        &>.box_item {
-            -webkit-user-select: none;
-            user-select: none;
-            height: fit-content;
-            padding: 3px 12px;
+#menu_box {
+    &>.box_item {
+        -webkit-user-select: none;
+        user-select: none;
+        height: fit-content;
+        padding: 3px 12px;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-            font-weight: bold;
+        font-weight: bold;
 
-            &+.box_item {
-                border-top: var(--length-6s) solid var(--border-color);
-            }
+        &+.box_item {
+            border-top: var(--length-6s) solid var(--border-color);
+        }
 
-            &[value="5"] {
-                color: #a22;
-            }
-            &[value="0"] {
-                color: #26a;
-            }
+        &[value="5"] {
+            color: #a22;
+        }
+        &[value="0"] {
+            color: #26a;
+        }
 
-            /* border-radius: 6px; */
+        /* border-radius: 6px; */
 
-            &:hover {
-                background-color: #fff;
-            }
+        &:hover {
+            background-color: #fff;
         }
     }
 }

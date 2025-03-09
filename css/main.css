@@ -137,9 +137,8 @@ section.card {
     &>.list_items_container {
         position: relative;
         width: 100%;
-        max-height: 50%;
         box-sizing: border-box;
-        padding: var(--length-m) var(--length-m) 0 var(--length-m);
+        padding: 0 var(--length-m) var(--length-m) var(--length-m);
         overflow: auto;
 
         &>.list_subtitle {
@@ -147,13 +146,20 @@ section.card {
             font-weight: bold;
             color: var(--skyblue);
             box-sizing: border-box;
-            padding: 0 0 var(--length-m) 0;
+            padding: var(--length-m) 0;
             -webkit-user-select: none;
             user-select: none;
         }
 
-        &>.list_group {
-            padding: 0 0 var(--length-m) 0;
+        &>.scoll_wrapper {
+            max-height: 70vh;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+
+            &>.list_group {
+                padding: 0;
+            }
         }
     }
 }
@@ -283,6 +289,8 @@ section.card {
         color: #fff;
         font-weight: bold;
 
+        cursor: none;
+
         &:hover {
             white-space: unset;
             text-align: start;
@@ -344,7 +352,7 @@ section.card {
     }
 }
 
-.list_items {
+.list_item {
     position: relative;
     margin-bottom: var(--length-m);
     box-sizing: border-box;
@@ -359,10 +367,15 @@ section.card {
     align-items: center;
     
     transition: all .2s ease-out;
-    &[quality="normal"] {
-        background: linear-gradient(to right, var(--skyblue-A), #fff);
-        border: var(--length-6s) solid var(--skyblue-A);
+
+    /* normal */
+    background: linear-gradient(to right, var(--skyblue-A), #fff);
+    border: var(--length-6s) solid var(--skyblue-A);
+
+    &:last-of-type {
+        margin-bottom: 0;
     }
+
     &[quality="high"] {
         background: linear-gradient(to right, var(--golden-A), #fff);
         border: var(--length-6s) solid var(--golden-A);
@@ -469,9 +482,7 @@ footer {
         padding: 0;
         margin: 0;
         font-size: var(--length-m);
-        color: #888;
-
-        letter-spacing: 1px;
+        color: #999;
     }
 
     & a {
