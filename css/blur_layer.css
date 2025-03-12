@@ -137,6 +137,12 @@
     }
 }
 
+@media (max-width: 580px) {
+    #item_detail {
+        font-size: 0.8em;
+    }
+}
+
 #menu_box {
     position: absolute;
     bottom: 0;
