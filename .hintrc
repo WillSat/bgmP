@@ -9,7 +9,8 @@
         "ignore": [
           "backdrop-filter",
           "height: fit-content",
-          "width: fit-content"
+          "width: fit-content",
+          "scrollbar-width"
         ]
       }
     ]

@@ -24,6 +24,17 @@ const calendarWrapperEle = document.getElementById('calendar_wrapper');
 const collectionsWrapperEle = document.getElementById('collections_wrapper');
 const contextMenuLayer = document.getElementById('context_menu_layer');
 
+const contentContainer = document.getElementById('content_container'),
+    closeMenuBtn = contextMenuLayer.querySelector('.close_btn'),
+    detailEle = document.getElementById('item_detail'),
+    detailBlurBg = document.getElementById('item_detail_blurbg'),
+    detailCover = document.getElementById('item_detail_cover'),
+    detailInfo = document.getElementById('item_detail_info'),
+    detailCnname = document.getElementById('item_detail_cnname'),
+    detailName = document.getElementById('item_detail_name'),
+    detailDesp = document.getElementById('item_detail_desp'),
+    detailRankScore = document.getElementById('item_detail_rankscore');
+
 initCalendar();
 initCollections();
 
@@ -90,6 +101,10 @@ function randerCalender(dayCode) {
             e.preventDefault();
             openCollOptionsMenu(a.rawData);
         })
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            openCollOptionsMenu(a.rawData);
+        })
     }
 
     // const score = obj['rating'] ? obj['rating']['score'] : false;
@@ -100,7 +115,7 @@ function randerCalender(dayCode) {
 
         const aEle = document.createElement('a');
         aEle.classList.add('image_items');
-        aEle.href = `http://bgm.tv/subject/${structData.id}`;
+        // aEle.href = `http://bgm.tv/subject/${structData.id}`;
         aEle.title = eleTitle;
         aEle.rawData = structData;
 
@@ -203,6 +218,10 @@ function randerCollections(typeArr) {
             e.preventDefault();
             openCollOptionsMenu(a.rawData);
         })
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCollOptionsMenu(a.rawData);
+        })
     }
 }
 
@@ -233,7 +252,7 @@ function createListItems(structData) {
     const aEle = document.createElement('a');
     aEle.classList.add('list_item');
     aEle.setAttribute('quality', quality);
-    aEle.href = `http://bgm.tv/subject/${structData.id}`;
+    // aEle.href = `http://bgm.tv/subject/${structData.id}`;
     aEle.title = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`;
     aEle.rawData = structData;
 
@@ -274,16 +293,45 @@ function createListItems(structData) {
 }
 
 function openCollOptionsMenu(rawData) {
+    if (window.clear_menu_timer) clearTimeout(window.clear_menu_timer);
+
+    request(`/v0/subjects/${rawData.id}`, 'GET', false, null)
+        .then(e => e.json())
+        .then(data => {
+            print(data);
+            detailDesp.innerHTML = `Bangumi ID: ${rawData.id}<br>${JSON.stringify(data)}`;
+        })
+
+    detailCover.src = detailBlurBg.src = rawData.imgUrl;
+    detailCover.alt = detailBlurBg.alt = rawData.id;
+    detailCnname.innerHTML = rawData.nameCn;
+    detailName.innerHTML = rawData.name;
+
+    if (rawData.rank && rawData.score) {
+        detailRankScore.innerHTML = `排名：<b>${rawData.rank}</b> · 评分：<b>${rawData.score}</b>`;
+    } else if (rawData.rank) {
+        detailRankScore.innerHTML = `排名：<b>${rawData.rank}</b>`;
+    } else if (rawData.score) {
+        detailRankScore.innerHTML = `评分：<b>${rawData.score}</b>`;
+    }
+
     rawDataofSelectedItem = rawData;
     contextMenuLayer.classList.add('open');
-
-    window.menu_timer = setTimeout(closeCollOptionsMenu, 60 * 1000);
 }
 
 function closeCollOptionsMenu() {
     contextMenuLayer.classList.remove('open');
+
+    window.clear_menu_timer = setTimeout(() => {
+        detailCover.src = detailBlurBg.src = '';
+        detailCover.alt = detailBlurBg.alt = '';
+        detailCnname.innerHTML = '';
+        detailName.innerHTML = '';
+        detailDesp.innerHTML = '';
+        detailRankScore.innerHTML = '';
+    }, 300);
+
     rawDataofSelectedItem = null;
-    if (window.menu_timer) clearTimeout(window.menu_timer);
 }
 
 // public fn
@@ -328,6 +376,10 @@ async function refreshUserData(isRandering) {
 {
     contextMenuLayer.addEventListener('click', closeCollOptionsMenu);
 
+    contentContainer.addEventListener('click', e => e.stopPropagation());
+
+    closeMenuBtn.addEventListener('click', closeCollOptionsMenu);
+
     for (const ele of document.querySelectorAll('#context_menu_layer div.box_item')) {
         ele.addEventListener('click', async function (e) {
             e.stopPropagation();
@@ -336,6 +388,7 @@ async function refreshUserData(isRandering) {
             // 0: open in bgm.tv
             if (+this.getAttribute('value') === 0) {
                 window.open(`https://bgm.tv/subject/${rawDataofSelectedItem.id}`);
+                closeCollOptionsMenu();
                 return;
             }
 
@@ -374,12 +427,16 @@ async function refreshUserData(isRandering) {
     function openSearchResult(children) {
         searchResultsWrapper.innerHTML = '';
 
-        randerGroup(`<span>“${input.value}” · ${children.length}</span><img class="close_btn" src="img/close.svg">`, children, searchResultsWrapper);
+        randerGroup(`<span>“${input.value}” · ${children.length}</span><img class="close_btn" src="img/close.svg" alt="">`, children, searchResultsWrapper);
         searchResultsWrapper.querySelector('.close_btn').addEventListener('click', closeSearchResult);
 
         // bind contextmenu event
         for (const a of document.querySelectorAll('#search_results a.list_item')) {
             a.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                openCollOptionsMenu(a.rawData);
+            })
+            a.addEventListener('click', (e) => {
                 e.preventDefault();
                 openCollOptionsMenu(a.rawData);
             })

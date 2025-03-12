@@ -92,16 +92,29 @@
     </section>
 
     <div id="context_menu_layer" class="blur_layer">
-        <div id="menu_box" class="box">
-            <div class="box_item" value="0">前往 Bangumi 操作</div>
-            <div class="box_item" value="3">标记为「在看」</div>
-            <div class="box_item" value="1">标记为「想看」</div>
-            <div class="box_item" value="4">标记为「搁置」</div>
-            <div class="box_item" value="2">标记为「看过」</div>
-            <div class="box_item" value="5">标记为「抛弃」</div>
+        <div id="content_container">
+            <img class="close_btn" src="img/close.svg" alt="">
+            <img id="item_detail_blurbg" alt="">
+            <div id="item_detail">
+                <img id="item_detail_cover" alt="">
+                <div id="item_detail_info">
+                    <div id="item_detail_name"></div>
+                    <div id="item_detail_cnname"></div>
+                    <div id="item_detail_desp"></div>
+                    <div id="item_detail_rankscore"></div>
+                </div>
+                <div id="menu_box">
+                    <div class="box_item" value="0">前往 Bangumi 查看</div>
+                    <div class="box_item" value="3">在看</div>
+                    <div class="box_item" value="1">想看</div>
+                    <div class="box_item" value="4">搁置</div>
+                    <div class="box_item" value="2">看过</div>
+                    <div class="box_item" value="5">抛弃</div>
+                </div>
+            </div>
         </div>
     </div>
-    
+
     <footer>
         <p>项目开源地址 <a href="https://github.com/WillSat/bgmP">Github</a></p>
         <p>本项目不提供任何动漫视频资源。特别感谢 <a href="https://bgm.tv/">Bangumi</a></p>

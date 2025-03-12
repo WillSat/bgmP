@@ -10,8 +10,7 @@
     height: 100%;
 
     background-color: #0008;
-    /* backdrop-filter: blur(2px); */
-    transition: .1s ease-out;
+    transition: .2s;
 
     display: flex;
     align-items: center;
@@ -22,46 +21,166 @@
         opacity: 1;
     }
 
-    &>.box {
+    &>#content_container {
         position: relative;
-        height: fit-content;
 
-        background-color: #fff8;
-        backdrop-filter: blur(50px) brightness(1.1);
-        border-radius: 8px;
+        box-shadow: 0 10px 20px #0004;
+        background-color: #aaa;
+        border-radius: 12px;
 
         overflow: hidden;
+
+        &>#item_detail_blurbg {
+            position: absolute;
+            width: calc(100% + 600px);
+            min-height: 100%;
+            left: -300px;
+            filter: blur(200px) brightness(.7);
+            transform: translateY(-50%);
+        }
+
+        &>.close_btn {
+            position: absolute;
+            z-index: 1;
+            top: 12px;
+            left: 12px;
+            width: 22px;
+            height: 22px;
+            padding: 4.5px;
+            box-sizing: border-box;
+            border-radius: 50%;
+            backdrop-filter: brightness(1.2);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            -webkit-user-select: none;
+            user-select: none;
+
+            transition: all .1s ease-out;
+
+            &:hover {
+                border-radius: 6px;
+                backdrop-filter: brightness(1.3);
+                
+            }
+        }
+    }
+}
+
+#item_detail {
+    position: relative;
+    width: min(80vw, 600px);
+
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+
+    background-color: #fff8;
+    padding-top: 34px;
+    padding-bottom: 52px;
+
+    overflow: hidden;
+
+    &>#item_detail_cover {
+        position: relative;
+        flex: 2;
+        flex-shrink: 0;
+        border-radius: 6px;
+
+        box-sizing: border-box;
+        border: 6px solid transparent;
+        width: 30%;
+        margin: 12px;
+    }
+
+    &>#item_detail_info,
+    &>#item_detail_cover {
+        backdrop-filter: brightness(1.2);
+    }
+
+    &>#item_detail_info {
+        position: relative;
+        flex: 3;
+        border-radius: 6px;
+        margin: 12px 12px 12px 0;
+        box-sizing: border-box;
+        padding: 8px;
+
+        overflow: hidden;
+
+        &>#item_detail_cnname,
+        &>#item_detail_name {
+            position: relative;
+            font-weight: bold;
+            color: #000c;
+        }
+
+        &>#item_detail_name {
+            color: #000;
+        }
+
+        &>#item_detail_desp,
+        &>#item_detail_rankscore {
+            position: relative;
+            font-size: 0.9em;
+            max-height: 40vh;
+            color: #000c;
+
+            scrollbar-width: thin;
+
+            overflow: auto;
+            white-space: break-all;
+            /* text-overflow: ellipsis; */
+        }
     }
 }
 
 #menu_box {
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 24px);
+    height: 40px;
+    box-sizing: border-box;
+    margin: 0 12px 12px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    /* backdrop-filter: brightness(1.2); */
+
+    overflow: hidden;
+
     &>.box_item {
         -webkit-user-select: none;
         user-select: none;
-        height: fit-content;
-        padding: 3px 12px;
+        flex-grow: 1;
+        box-sizing: border-box;
+        height: 100%;
 
         display: flex;
         align-items: center;
         justify-content: center;
 
         font-weight: bold;
-
-        &+.box_item {
-            border-top: var(--length-6s) solid var(--border-color);
+        color: #000c;
+        transition: all .1s ease-out;
+        
+        &:hover {
+            backdrop-filter: brightness(1.3);
+            color: #000;
+            flex-grow: 1.2;
+            border-radius: 6px;
         }
 
         &[value="5"] {
-            color: #a22;
+            color: #911;
         }
+
         &[value="0"] {
-            color: #26a;
-        }
-
-        /* border-radius: 6px; */
-
-        &:hover {
-            background-color: #fffa;
+            color: #048;
         }
     }
 }
