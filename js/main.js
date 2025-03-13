@@ -429,7 +429,7 @@ async function refreshUserData(isRandering) {
 
     closeMenuBtn.addEventListener('click', closeCollOptionsMenu);
 
-    for (const ele of document.querySelectorAll('#context_menu_layer div.box_item')) {
+    for (const ele of document.querySelectorAll('#menu_box div.box_item')) {
         ele.addEventListener('click', async function (e) {
             e.stopPropagation();
             if (!rawDataofSelectedItem || !rawDataofSelectedItem.id) return;
