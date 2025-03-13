@@ -22,12 +22,13 @@ let collectionsDataList = [];
 
 const calendarWrapperEle = document.getElementById('calendar_wrapper');
 const collectionsWrapperEle = document.getElementById('collections_wrapper');
-const contextMenuLayer = document.getElementById('context_menu_layer');
+const detailLayer = document.getElementById('detail_layer');
 
-const contentContainer = document.getElementById('content_container'),
-    closeMenuBtn = contextMenuLayer.querySelector('.close_btn'),
+const detailContainer = document.getElementById('detail_container'),
+    detailBlurBg = document.getElementById('detail_blurbg'),
+    closeMenuBtn = detailLayer.querySelector('.close_btn'),
     detailEle = document.getElementById('item_detail'),
-    detailBlurBg = document.getElementById('item_detail_blurbg'),
+    detailTitle = document.querySelector('#detail_title > span'),
     detailCover = document.getElementById('item_detail_cover'),
     detailInfo = document.getElementById('item_detail_info'),
     detailCnname = document.getElementById('item_detail_cnname'),
@@ -292,41 +293,89 @@ function createListItems(structData) {
     return aEle;
 }
 
-function openCollOptionsMenu(rawData) {
+async function openCollOptionsMenu(rawData) {
+    if (window.mune_opening) return;
+    window.mune_opening = true;
+
     if (window.clear_menu_timer) clearTimeout(window.clear_menu_timer);
 
-    request(`/v0/subjects/${rawData.id}`, 'GET', false, null)
-        .then(e => e.json())
-        .then(data => {
-            print(data);
-            detailDesp.innerHTML = `Bangumi ID: ${rawData.id}<br>${JSON.stringify(data)}`;
-        })
+    const detailData = await (await request(`/v0/subjects/${rawData.id}`, 'GET', false, null)).json();
+
+    const detailObj = getItemDetail(detailData);
+
+    const summary = detailObj.summary && detailObj.summary !== '' ? detailObj.summary : false;
+    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e));
+    const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count));
+    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock(e.key) + (typeof(e.value) === 'string' ? wordBlock(e.value) : wordBlock(JSON.stringify(e.value))));
+
+    detailDesp.innerHTML = [
+        detailObj.date ? wordBlock(detailObj.date) : '',
+        detailObj.totalEpisodes ? wordBlock('共 ' + detailObj.totalEpisodes + ' 集') : '',
+        detailObj.platform ? wordBlock(detailObj.platform) : '',
+        wordBlock('ID ' + rawData.id),
+        '<br><br>',
+        // Remove duplicates
+        metaTags.join(''),
+        metaTags.length !== 0 ? '<br>' : '',
+        tags.join(''),
+        tags.length !== 0 ? '<br><br>' : '',
+        summary ? wordBlock('简介') : '',
+        summary ? wordBlock(summary) : '',
+        summary ? '<br><br>' : '',
+        infoBox.join('<br><br>'),
+    ].join('');
 
     detailCover.src = detailBlurBg.src = rawData.imgUrl;
     detailCover.alt = detailBlurBg.alt = rawData.id;
-    detailCnname.innerHTML = rawData.nameCn;
-    detailName.innerHTML = rawData.name;
+    detailCnname.textContent = rawData.nameCn;
+    detailName.textContent = detailTitle.textContent = rawData.name;
 
     if (rawData.rank && rawData.score) {
-        detailRankScore.innerHTML = `排名：<b>${rawData.rank}</b> · 评分：<b>${rawData.score}</b>`;
+        detailRankScore.innerHTML = `${wordBlock('排名 ' + rawData.rank) + wordBlock('评分 ' + rawData.score)}`;
     } else if (rawData.rank) {
-        detailRankScore.innerHTML = `排名：<b>${rawData.rank}</b>`;
+        detailRankScore.innerHTML = wordBlock(`排名 <b>${rawData.rank}</b>`);
     } else if (rawData.score) {
-        detailRankScore.innerHTML = `评分：<b>${rawData.score}</b>`;
+        detailRankScore.innerHTML = wordBlock(`评分 <b>${rawData.score}</b>`);
     }
 
     rawDataofSelectedItem = rawData;
-    contextMenuLayer.classList.add('open');
+    detailLayer.classList.add('open');
+
+    window.mune_opening = false;
+
+    function wordBlock(content, count) {
+        return `<span class="word_block">${content}${count ? `<span class="sub_word_block">${count}</span>` : ''}</span>`;
+    }
+
+    function getItemDetail(data) {
+        return {
+            date: data['date'],
+            // date: String
+            platform: data['platform'],
+            // platform: String
+            metaTags: data['meta_tags'],
+            // meta_tags: [ String ]
+            tags: data['tags'],
+            // tags: [{ "name", "count", "total_cont" }]
+            totalEpisodes: data['total_episodes'],
+            // total_episodes: int
+            infobox: data['infobox'],
+            // infobox: [{ "key", "value" }]
+            summary: data['summary']
+            // summary: String
+        };
+    }
 }
 
 function closeCollOptionsMenu() {
-    contextMenuLayer.classList.remove('open');
+    detailLayer.classList.remove('open');
 
     window.clear_menu_timer = setTimeout(() => {
         detailCover.src = detailBlurBg.src = '';
         detailCover.alt = detailBlurBg.alt = '';
-        detailCnname.innerHTML = '';
-        detailName.innerHTML = '';
+        detailTitle.textContent = '';
+        detailCnname.textContent = '';
+        detailName.textContent = '';
         detailDesp.innerHTML = '';
         detailRankScore.innerHTML = '';
     }, 300);
@@ -374,9 +423,9 @@ async function refreshUserData(isRandering) {
 }
 
 {
-    contextMenuLayer.addEventListener('click', closeCollOptionsMenu);
+    detailLayer.addEventListener('click', closeCollOptionsMenu);
 
-    contentContainer.addEventListener('click', e => e.stopPropagation());
+    detailContainer.addEventListener('click', e => e.stopPropagation());
 
     closeMenuBtn.addEventListener('click', closeCollOptionsMenu);
 

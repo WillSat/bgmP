@@ -2,126 +2,130 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base target="_blank">
-    <title>bgmP</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/blur_layer.css">
-    <link rel="stylesheet" href="css/search.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base target="_blank">
+  <title>bgmP</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/detail_layer.css">
+  <link rel="stylesheet" href="css/search.css">
 </head>
 
 <body>
-    <!-- title -->
-    <section id="title">
-        <div>
-            <input id="access_token_inupt" placeholder="Bangumi Access-Token" type="text">
-        </div>
-        <div>
-            <input id="search_input" placeholder="使用 Bangumi 搜索" type="text">
-            <button type="button" id="search_btn">搜索</button>
-        </div>
-    </section>
-
-    <!-- search_result -->
-    <section id="search_results" class="card close hidden">
-        <div id="search_results_wrapper" class="list_items_container"></div>
-    </section>
-
-    <!-- calendar -->
-    <section id="calendar" class="card">
-        <div id="calendar_bar" class="card_bar">
-            <span>放送</span>
-            <div>
-                <input type="radio" id="radio-mon" name="calendar-weekday" value="1">
-                <label for="radio-mon">一</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-tue" name="calendar-weekday" value="2">
-                <label for="radio-tue">二</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-wed" name="calendar-weekday" value="3">
-                <label for="radio-wed">三</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-thu" name="calendar-weekday" value="4">
-                <label for="radio-thu">四</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-fri" name="calendar-weekday" value="5">
-                <label for="radio-fri">五</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-sat" name="calendar-weekday" value="6">
-                <label for="radio-sat">六</label>
-            </div>
-            <div>
-                <input type="radio" id="radio-sun" name="calendar-weekday" value="7">
-                <label for="radio-sun">日</label>
-            </div>
-        </div>
-        <div id="calendar_wrapper" class="image_items_container"></div>
-    </section>
-
-    <!-- collections -->
-    <section id="collections" class="card">
-        <div id="collections_bar" class="card_bar"><span>收藏</span>
-            <div>
-                <input type="checkbox" id="checkbox-a" name="collection-type" value="3">
-                <label for="checkbox-a">在看</label>
-            </div>
-            <div>
-                <input type="checkbox" id="checkbox-b" name="collection-type" value="1">
-                <label for="checkbox-b">想看</label>
-            </div>
-            <div>
-                <input type="checkbox" id="checkbox-c" name="collection-type" value="4">
-                <label for="checkbox-c">搁置</label>
-            </div>
-            <div>
-                <input type="checkbox" id="checkbox-d" name="collection-type" value="2">
-                <label for="checkbox-d">看过</label>
-            </div>
-            <div>
-                <input type="checkbox" id="checkbox-e" name="collection-type" value="5">
-                <label for="checkbox-e">抛弃</label>
-            </div>
-        </div>
-        <div id="collections_wrapper" class="list_items_container"></div>
-    </section>
-
-    <div id="context_menu_layer" class="blur_layer">
-        <div id="content_container">
-            <img class="close_btn" src="img/close.svg" alt="">
-            <img id="item_detail_blurbg" alt="">
-            <div id="item_detail">
-                <img id="item_detail_cover" alt="">
-                <div id="item_detail_info">
-                    <div id="item_detail_name"></div>
-                    <div id="item_detail_cnname"></div>
-                    <div id="item_detail_desp"></div>
-                    <div id="item_detail_rankscore"></div>
-                </div>
-                <div id="menu_box">
-                    <div class="box_item" value="0">前往 Bangumi 查看</div>
-                    <div class="box_item" value="3">在看</div>
-                    <div class="box_item" value="1">想看</div>
-                    <div class="box_item" value="4">搁置</div>
-                    <div class="box_item" value="2">看过</div>
-                    <div class="box_item" value="5">抛弃</div>
-                </div>
-            </div>
-        </div>
+  <!-- title -->
+  <section id="title">
+    <div>
+      <input id="access_token_inupt" placeholder="Bangumi Access-Token" type="text">
     </div>
+    <div>
+      <input id="search_input" placeholder="使用 Bangumi 搜索" type="text">
+      <button type="button" id="search_btn">搜索</button>
+    </div>
+  </section>
 
-    <footer>
-        <p>项目开源地址 <a href="https://github.com/WillSat/bgmP">Github</a></p>
-        <p>本项目不提供任何动漫视频资源。特别感谢 <a href="https://bgm.tv/">Bangumi</a></p>
-    </footer>
+  <!-- search_result -->
+  <section id="search_results" class="card close hidden">
+    <div id="search_results_wrapper" class="list_items_container"></div>
+  </section>
 
-    <script src="js/ua.js"></script>
-    <script src="js/main.js"></script>
+  <!-- calendar -->
+  <section id="calendar" class="card">
+    <div id="calendar_bar" class="card_bar">
+      <span>放送</span>
+      <div>
+        <input type="radio" id="radio-mon" name="calendar-weekday" value="1">
+        <label for="radio-mon">一</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-tue" name="calendar-weekday" value="2">
+        <label for="radio-tue">二</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-wed" name="calendar-weekday" value="3">
+        <label for="radio-wed">三</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-thu" name="calendar-weekday" value="4">
+        <label for="radio-thu">四</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-fri" name="calendar-weekday" value="5">
+        <label for="radio-fri">五</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-sat" name="calendar-weekday" value="6">
+        <label for="radio-sat">六</label>
+      </div>
+      <div>
+        <input type="radio" id="radio-sun" name="calendar-weekday" value="7">
+        <label for="radio-sun">日</label>
+      </div>
+    </div>
+    <div id="calendar_wrapper" class="image_items_container"></div>
+  </section>
+
+  <!-- collections -->
+  <section id="collections" class="card">
+    <div id="collections_bar" class="card_bar"><span>收藏</span>
+      <div>
+        <input type="checkbox" id="checkbox-a" name="collection-type" value="3">
+        <label for="checkbox-a">在看</label>
+      </div>
+      <div>
+        <input type="checkbox" id="checkbox-b" name="collection-type" value="1">
+        <label for="checkbox-b">想看</label>
+      </div>
+      <div>
+        <input type="checkbox" id="checkbox-c" name="collection-type" value="4">
+        <label for="checkbox-c">搁置</label>
+      </div>
+      <div>
+        <input type="checkbox" id="checkbox-d" name="collection-type" value="2">
+        <label for="checkbox-d">看过</label>
+      </div>
+      <div>
+        <input type="checkbox" id="checkbox-e" name="collection-type" value="5">
+        <label for="checkbox-e">抛弃</label>
+      </div>
+    </div>
+    <div id="collections_wrapper" class="list_items_container"></div>
+  </section>
+
+  <div id="detail_layer">
+    <div id="detail_container">
+      <img id="detail_blurbg" alt="">
+      <div id="detail_column_wrapper">
+        <div id="detail_title">
+          <span></span><img class="close_btn" src="img/close.svg" alt="X">
+        </div>
+        <div id="item_detail">
+          <img id="item_detail_cover" alt="">
+          <div id="item_detail_info">
+            <div id="item_detail_name"></div>
+            <div id="item_detail_cnname"></div><br>
+            <div id="item_detail_rankscore"></div>
+            <div id="item_detail_desp"></div>
+          </div>
+        </div>
+        <div id="menu_box">
+          <div class="box_item" value="0">前往 Bangumi 查看</div>
+          <div class="box_item" value="3">在看</div>
+          <div class="box_item" value="1">想看</div>
+          <div class="box_item" value="4">搁置</div>
+          <div class="box_item" value="2">看过</div>
+          <div class="box_item" value="5">抛弃</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>项目开源地址 <a href="https://github.com/WillSat/bgmP">Github</a></p>
+    <p>本项目不提供任何动漫视频资源。特别感谢 <a href="https://bgm.tv/">Bangumi</a></p>
+  </footer>
+
+  <script src="js/ua.js"></script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>
