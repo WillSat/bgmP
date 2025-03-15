@@ -312,15 +312,15 @@ async function openCollOptionsMenu(rawData) {
 
     const detailObj = getItemDetail(detailData);
 
-    const summary = detailObj.summary && detailObj.summary !== '' ? detailObj.summary : false;
+    const summary = (detailObj.summary && detailObj.summary !== '') ? detailObj.summary.trim() : false;
     // Remove duplicates
-    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e, 'META'));
-    const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count));
-    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock((typeof(e.value) === 'string' ? e.value : JSON.stringify(e.value)), null, e.key));
+    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e, 'META', null, 'tag'));
+    const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count, null, 'tag'));
+    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock((typeof(e.value) === 'string' ? e.value : JSON.stringify(e.value)), null, e.key, 'info'));
 
     detailDesp.innerHTML = [
         detailObj.date ? wordBlock(detailObj.date, null, '放送开始') : '',
-        detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '集数') : '',
+        detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '话数') : '',
         detailObj.platform ? wordBlock(detailObj.platform, null, '平台') : '',
         wordBlock(rawData.id, null, 'ID'),
         '<br>',
@@ -351,8 +351,8 @@ async function openCollOptionsMenu(rawData) {
 
     window.mune_opening = false;
 
-    function wordBlock(content, tail, head) {
-        return `<div class="word_block">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
+    function wordBlock(content, tail, head, className) {
+        return `<div class="word_block ${className ?? ''}">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
     }
 
     function getItemDetail(data) {

@@ -10,7 +10,8 @@
           "backdrop-filter",
           "height: fit-content",
           "width: fit-content",
-          "scrollbar-width"
+          "scrollbar-width",
+          "overscroll-behavior"
         ]
       }
     ]

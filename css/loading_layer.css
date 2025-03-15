@@ -23,8 +23,6 @@
         border-radius: 20px;
         box-shadow: 0 0 20px var(--red);
 
-        /* backdrop-filter: blur(6px) brightness(1.2); */
-
         animation: ease-out infinite ani 1.2s;
     }
 }

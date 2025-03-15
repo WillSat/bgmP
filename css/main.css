@@ -9,9 +9,9 @@
     --skyblue: #3582e9;
     --skyblue-A: #3582e92e;
     --skyblue-AA: #3582e91f;
-    --deepcyan: #029f9f;
-    --deepcyan-A: #029f9f2e;
-    --deepcyan-AA: #029f9f1f;
+    --deepcyan: #02889f;
+    --deepcyan-A: #02889f2e;
+    --deepcyan-AA: #02889f1f;
 
     --themecolor: var(--deepcyan);
     --themecolor-A: var(--deepcyan-A);
@@ -167,7 +167,7 @@ section.card {
         box-sizing: border-box;
         padding: var(--length-s);
 
-        columns: 8rem auto;
+        columns: 9rem auto;
         column-gap: var(--length-s);
         page-break-inside: avoid;
 
@@ -187,15 +187,14 @@ section.card {
             color: var(--themecolor);
             box-sizing: border-box;
             padding: var(--length-2s) 0;
-            font-size: 1rem;
+            font-size: 1rem !important;
             -webkit-user-select: none;
             user-select: none;
         }
 
         &>.scoll_wrapper {
-            max-height: 70vh;
+            max-height: 60vh;
             overflow-y: scroll;
-            scroll-behavior: smooth;
             scrollbar-width: thin;
 
             scroll-snap-type: y mandatory;
@@ -215,10 +214,11 @@ section.card {
 .image_items {
     position: relative;
     margin-bottom: var(--length-s);
-    background: linear-gradient(var(--themecolor-A), #0006, var(--themecolor-A));
+    background: linear-gradient(var(--themecolor-AA), #0006, var(--themecolor-A));
     overflow: hidden;
     border-radius: var(--length-2s);
-    box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color);
+    /* box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color); */
+    border: solid 1px var(--themecolor-A);
     box-sizing: border-box;
     transition: all .2s ease-out;
     aspect-ratio: 0.75;
@@ -317,8 +317,8 @@ section.card {
     transition: all .2s ease-out;
 
     /* normal */
-    background: linear-gradient(to right, var(--themecolor-A) 20%, #fff);
-    border: var(--length-6s) solid var(--themecolor-A);
+    background: linear-gradient(to right, var(--themecolor-AA) 20%, #fff);
+    border: var(--length-6s) solid var(--themecolor-AA);
 
     &:last-of-type {
         margin-bottom: 0;
@@ -412,7 +412,7 @@ input[type='checkbox'] {
     display: none;
 
     &+label {
-        background-color: var(--themecolor-A);
+        background-color: var(--themecolor-AA);
         border-radius: var(--length-2s);
         padding: var(--length-5s) var(--length-2s);
         margin: 0;
