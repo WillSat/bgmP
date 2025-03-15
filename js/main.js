@@ -69,8 +69,7 @@ async function initCalendar() { // Calendar
     }
 
     randerCalender(todayWeekDay);
-    loadFinished();
-
+    
     // switch event
     weekdayRadios.forEach(ele => {
         if (todayWeekDay === +ele.value) {
@@ -85,6 +84,7 @@ async function initCalendar() { // Calendar
             }
         })
     });
+    loadFinished();
 }
 
 function randerCalender(dayCode) {
@@ -301,9 +301,8 @@ function createListItems(structData) {
 }
 
 async function openCollOptionsMenu(rawData) {
-    startLoading();
-
     if (window.mune_opening) return;
+    startLoading();
     window.mune_opening = true;
 
     if (window.clear_menu_timer) clearTimeout(window.clear_menu_timer);
@@ -448,6 +447,7 @@ async function refreshUserData(isRandering) {
             if (+this.getAttribute('value') === 0) {
                 window.open(`https://bgm.tv/subject/${rawDataofSelectedItem.id}`);
                 closeCollOptionsMenu();
+                loadFinished();
                 return;
             }
 
