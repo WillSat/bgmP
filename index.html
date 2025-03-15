@@ -8,19 +8,16 @@
   <title>bgmP</title>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/detail_layer.css">
+  <link rel="stylesheet" href="css/loading_layer.css">
   <link rel="stylesheet" href="css/search.css">
 </head>
 
 <body>
   <!-- title -->
-  <section id="title">
-    <div>
-      <input id="access_token_inupt" placeholder="Bangumi Access-Token" type="text">
-    </div>
-    <div>
-      <input id="search_input" placeholder="使用 Bangumi 搜索" type="text">
-      <button type="button" id="search_btn">搜索</button>
-    </div>
+  <section id="title" class="card">
+    <input id="access_token_inupt" placeholder="Bangumi Access-Token" type="text">
+    <input id="search_input" placeholder="使用 Bangumi 搜索" type="text">
+    <div class="btn" id="search_btn">搜索</div>
   </section>
 
   <!-- search_result -->
@@ -117,6 +114,10 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="loading_layer">
+    <div id="loading_box" title="Loading..."></div>
   </div>
 
   <footer>

@@ -36,6 +36,9 @@ const detailContainer = document.getElementById('detail_container'),
     detailDesp = document.getElementById('item_detail_desp'),
     detailRankScore = document.getElementById('item_detail_rankscore');
 
+const loadingLayer = document.getElementById('loading_layer');
+const loadingBox = document.getElementById('loading_box');
+
 initCalendar();
 initCollections();
 
@@ -51,6 +54,7 @@ function sortStructData(a, b) {
 }
 
 async function initCalendar() { // Calendar
+    startLoading();
     const todayWeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
     const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
 
@@ -65,6 +69,7 @@ async function initCalendar() { // Calendar
     }
 
     randerCalender(todayWeekDay);
+    loadFinished();
 
     // switch event
     weekdayRadios.forEach(ele => {
@@ -151,6 +156,7 @@ function randerCalender(dayCode) {
 
 // Collections
 async function initCollections(isRefresh) {
+    startLoading();
     if (!accessToken) {
         // log out
         collectionsWrapperEle.innerHTML = '';
@@ -198,6 +204,7 @@ async function initCollections(isRefresh) {
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
         })
     });
+    loadFinished();
 }
 
 function randerCollections(typeArr) {
@@ -294,6 +301,8 @@ function createListItems(structData) {
 }
 
 async function openCollOptionsMenu(rawData) {
+    startLoading();
+
     if (window.mune_opening) return;
     window.mune_opening = true;
 
@@ -304,25 +313,24 @@ async function openCollOptionsMenu(rawData) {
     const detailObj = getItemDetail(detailData);
 
     const summary = detailObj.summary && detailObj.summary !== '' ? detailObj.summary : false;
-    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e));
+    // Remove duplicates
+    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e, 'META'));
     const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count));
-    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock(e.key) + (typeof(e.value) === 'string' ? wordBlock(e.value) : wordBlock(JSON.stringify(e.value))));
+    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock((typeof(e.value) === 'string' ? e.value : JSON.stringify(e.value)), null, e.key));
 
     detailDesp.innerHTML = [
-        detailObj.date ? wordBlock(detailObj.date) : '',
-        detailObj.totalEpisodes ? wordBlock('共 ' + detailObj.totalEpisodes + ' 集') : '',
-        detailObj.platform ? wordBlock(detailObj.platform) : '',
-        wordBlock('ID ' + rawData.id),
-        '<br><br>',
-        // Remove duplicates
+        detailObj.date ? wordBlock(detailObj.date, null, '放送开始') : '',
+        detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '集数') : '',
+        detailObj.platform ? wordBlock(detailObj.platform, null, '平台') : '',
+        wordBlock(rawData.id, null, 'ID'),
+        '<br>',
         metaTags.join(''),
         metaTags.length !== 0 ? '<br>' : '',
         tags.join(''),
-        tags.length !== 0 ? '<br><br>' : '',
-        summary ? wordBlock('简介') : '',
-        summary ? wordBlock(summary) : '',
-        summary ? '<br><br>' : '',
-        infoBox.join('<br><br>'),
+        tags.length !== 0 ? '<br>' : '',
+        summary ? wordBlock(summary, null, '简介') : '',
+        summary ? '<br>' : '',
+        infoBox.join('<br>'),
     ].join('');
 
     detailCover.src = detailBlurBg.src = rawData.imgUrl;
@@ -331,11 +339,11 @@ async function openCollOptionsMenu(rawData) {
     detailName.textContent = detailTitle.textContent = rawData.name;
 
     if (rawData.rank && rawData.score) {
-        detailRankScore.innerHTML = `${wordBlock('排名 ' + rawData.rank) + wordBlock('评分 ' + rawData.score)}`;
+        detailRankScore.innerHTML = `${wordBlock(rawData.rank, null, '排名') + wordBlock(rawData.score, null, '评分')}`;
     } else if (rawData.rank) {
-        detailRankScore.innerHTML = wordBlock(`排名 <b>${rawData.rank}</b>`);
+        detailRankScore.innerHTML = wordBlock(rawData.rank, null, '排名');
     } else if (rawData.score) {
-        detailRankScore.innerHTML = wordBlock(`评分 <b>${rawData.score}</b>`);
+        detailRankScore.innerHTML = wordBlock(rawData.score, null, '评分');
     }
 
     rawDataofSelectedItem = rawData;
@@ -343,8 +351,8 @@ async function openCollOptionsMenu(rawData) {
 
     window.mune_opening = false;
 
-    function wordBlock(content, count) {
-        return `<span class="word_block">${content}${count ? `<span class="sub_word_block">${count}</span>` : ''}</span>`;
+    function wordBlock(content, tail, head) {
+        return `<span class="word_block">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</span>`;
     }
 
     function getItemDetail(data) {
@@ -365,6 +373,7 @@ async function openCollOptionsMenu(rawData) {
             // summary: String
         };
     }
+    loadFinished();
 }
 
 function closeCollOptionsMenu() {
@@ -431,6 +440,7 @@ async function refreshUserData(isRandering) {
 
     for (const ele of document.querySelectorAll('#menu_box div.box_item')) {
         ele.addEventListener('click', async function (e) {
+            startLoading();
             e.stopPropagation();
             if (!rawDataofSelectedItem || !rawDataofSelectedItem.id) return;
 
@@ -463,6 +473,7 @@ async function refreshUserData(isRandering) {
             }
 
             closeCollOptionsMenu();
+            loadFinished();
         })
     }
 }
@@ -505,6 +516,7 @@ async function refreshUserData(isRandering) {
     }
 
     btn.addEventListener('click', () => {
+        startLoading();
         if (!input.value) {
             input.focus();
             return;
@@ -525,10 +537,21 @@ async function refreshUserData(isRandering) {
                 )
             }
             openSearchResult(tempArr);
+            loadFinished();
         })
     });
 }
 
-function print(msg) {
-    console.log(msg);
+function startLoading() {
+    if (window.loading_counter) window.loading_counter += 1;
+    else window.loading_counter = 1;
+
+    loadingLayer.style.display = '';
+}
+
+function loadFinished() {
+    window.loading_counter -= 1;
+    if (window.loading_counter > 0) return;
+
+    loadingLayer.style.display = 'none';
 }
