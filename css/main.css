@@ -169,7 +169,7 @@ section.card {
 
         columns: 9rem auto;
         column-gap: var(--length-s);
-        page-break-inside: avoid;
+        break-inside: avoid;
 
         overflow: auto;
     }
@@ -204,7 +204,7 @@ section.card {
 
                 columns: 16rem auto;
                 column-gap: var(--length-s);
-                page-break-inside: avoid;
+                break-inside: avoid;
             }
         }
     }
