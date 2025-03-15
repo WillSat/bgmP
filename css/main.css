@@ -167,9 +167,9 @@ section.card {
         box-sizing: border-box;
         padding: var(--length-s);
 
-        column-count: auto;
-        column-width: 9rem;
+        columns: 8rem auto;
         column-gap: var(--length-s);
+        page-break-inside: avoid;
 
         overflow: auto;
     }
@@ -198,12 +198,14 @@ section.card {
             scroll-behavior: smooth;
             scrollbar-width: thin;
 
+            scroll-snap-type: y mandatory;
+
             &>.list_group {
                 padding: 0;
 
-                column-count: auto;
-                column-width: 19rem;
+                columns: 16rem auto;
                 column-gap: var(--length-s);
+                page-break-inside: avoid;
             }
         }
     }
@@ -297,6 +299,8 @@ section.card {
 }
 
 .list_item {
+    scroll-snap-align: start;
+
     position: relative;
     margin-bottom: var(--length-s);
     box-sizing: border-box;

@@ -352,7 +352,7 @@ async function openCollOptionsMenu(rawData) {
     window.mune_opening = false;
 
     function wordBlock(content, tail, head) {
-        return `<span class="word_block">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</span>`;
+        return `<div class="word_block">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
     }
 
     function getItemDetail(data) {
@@ -487,7 +487,7 @@ async function refreshUserData(isRandering) {
     function openSearchResult(children) {
         searchResultsWrapper.innerHTML = '';
 
-        randerGroup(`<span>“${input.value}” · ${children.length}</span><img class="close_btn" src="img/close.svg" alt="">`, children, searchResultsWrapper);
+        randerGroup(`<div>“${input.value}” · ${children.length}</div><img class="close_btn" src="img/close.svg" alt="">`, children, searchResultsWrapper);
         searchResultsWrapper.querySelector('.close_btn').addEventListener('click', closeSearchResult);
 
         // bind contextmenu event
