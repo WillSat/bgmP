@@ -439,17 +439,17 @@ async function refreshUserData(isRandering) {
 
     for (const ele of document.querySelectorAll('#menu_box div.box_item')) {
         ele.addEventListener('click', async function (e) {
-            startLoading();
             e.stopPropagation();
             if (!rawDataofSelectedItem || !rawDataofSelectedItem.id) return;
-
+            
             // 0: open in bgm.tv
             if (+this.getAttribute('value') === 0) {
                 window.open(`https://bgm.tv/subject/${rawDataofSelectedItem.id}`);
                 closeCollOptionsMenu();
-                loadFinished();
                 return;
             }
+            
+            startLoading();
 
             try {
                 await request(
@@ -516,11 +516,12 @@ async function refreshUserData(isRandering) {
     }
 
     btn.addEventListener('click', () => {
-        startLoading();
         if (!input.value) {
             input.focus();
             return;
         }
+
+        startLoading();
 
         request(
             `/search/subject/${input.value}?type=2&responseGroup=large&max_results=${SearchResultPreRequest}`,
