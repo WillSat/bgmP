@@ -202,7 +202,7 @@ section.card {
             &>.list_group {
                 padding: 0;
 
-                columns: 16rem auto;
+                columns: 18rem auto;
                 column-gap: var(--length-s);
                 break-inside: avoid;
             }

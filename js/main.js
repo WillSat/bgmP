@@ -6,6 +6,7 @@ const LSKeys = {
     displayCollectionsTypeArr: 'display_collections_type_arr'
 };
 const baseUrl = 'https://api.bgm.tv';
+const CollTypeDisplayArr = [null, '想看', '看过', '在看', '搁置', '抛弃'];
 
 // ["grid", "small", "common", "medium", "large"];
 const CalendarImageQuality = 'large';
@@ -33,8 +34,7 @@ const detailContainer = document.getElementById('detail_container'),
     detailInfo = document.getElementById('item_detail_info'),
     detailCnname = document.getElementById('item_detail_cnname'),
     detailName = document.getElementById('item_detail_name'),
-    detailDesp = document.getElementById('item_detail_desp'),
-    detailRankScore = document.getElementById('item_detail_rankscore');
+    detailDesp = document.getElementById('item_detail_desp');
 
 const loadingLayer = document.getElementById('loading_layer');
 const loadingBox = document.getElementById('loading_box');
@@ -69,7 +69,7 @@ async function initCalendar() { // Calendar
     }
 
     randerCalender(todayWeekDay);
-    
+
     // switch event
     weekdayRadios.forEach(ele => {
         if (todayWeekDay === +ele.value) {
@@ -105,11 +105,11 @@ function randerCalender(dayCode) {
     for (const a of document.querySelectorAll('#calendar_wrapper a.image_items')) {
         a.addEventListener('contextmenu', function (e) {
             e.preventDefault();
-            openCollOptionsMenu(a.rawData);
+            openDetailMenu(a.rawData);
         })
         a.addEventListener('click', function (e) {
             e.preventDefault();
-            openCollOptionsMenu(a.rawData);
+            openDetailMenu(a.rawData);
         })
     }
 
@@ -214,7 +214,7 @@ function randerCollections(typeArr) {
     for (const type of typeArr) {
         const tempArr = collectionsDataList.filter(e => e.inCollType === type).toSorted(sortStructData).map(obj => createListItems(obj));
         randerGroup(
-            `${[null, '想看', '看过', '在看', '搁置', '抛弃'][type]} · ${tempArr.length}`,
+            `${CollTypeDisplayArr[type]} · ${tempArr.length}`,
             tempArr,
             collectionsWrapperEle
         );
@@ -224,11 +224,11 @@ function randerCollections(typeArr) {
     for (const a of document.querySelectorAll('#collections_wrapper a.list_item')) {
         a.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            openCollOptionsMenu(a.rawData);
+            openDetailMenu(a.rawData);
         })
         a.addEventListener('click', (e) => {
             e.preventDefault();
-            openCollOptionsMenu(a.rawData);
+            openDetailMenu(a.rawData);
         })
     }
 }
@@ -300,55 +300,73 @@ function createListItems(structData) {
     return aEle;
 }
 
-async function openCollOptionsMenu(rawData) {
+function openDetailMenu(rawData) {
     if (window.mune_opening) return;
-    startLoading();
     window.mune_opening = true;
+    startLoading();
 
     if (window.clear_menu_timer) clearTimeout(window.clear_menu_timer);
 
-    const detailData = await (await request(`/v0/subjects/${rawData.id}`, 'GET', false, null)).json();
+    // 
+    // rander start
+    // 
 
-    const detailObj = getItemDetail(detailData);
-
-    const summary = (detailObj.summary && detailObj.summary !== '') ? detailObj.summary.trim() : false;
-    // Remove duplicates
-    const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e, 'META', null, 'tag'));
-    const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count, null, 'tag'));
-    const infoBox = (detailObj.infobox ?? []).map(e => wordBlock((typeof(e.value) === 'string' ? e.value : JSON.stringify(e.value)), null, e.key, 'info'));
-
-    detailDesp.innerHTML = [
-        detailObj.date ? wordBlock(detailObj.date, null, '放送开始') : '',
-        detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '话数') : '',
-        detailObj.platform ? wordBlock(detailObj.platform, null, '平台') : '',
-        wordBlock(rawData.id, null, 'ID'),
-        '<br>',
-        metaTags.join(''),
-        metaTags.length !== 0 ? '<br>' : '',
-        tags.join(''),
-        tags.length !== 0 ? '<br>' : '',
-        summary ? wordBlock(summary, null, '简介') : '',
-        summary ? '<br>' : '',
-        infoBox.join('<br>'),
-    ].join('');
-
+    // search collection, rander status
+    const itemInCollIndex = collectionsDataList.findIndex(e => e.id === rawData.id);
+    inCollStatus = itemInCollIndex > -1 ? CollTypeDisplayArr[collectionsDataList[itemInCollIndex].inCollType] : '未收藏';
+    detailTitle.textContent = `${inCollStatus} · ${rawData.name}`;
     detailCover.src = detailBlurBg.src = rawData.imgUrl;
     detailCover.alt = detailBlurBg.alt = rawData.id;
     detailCnname.textContent = rawData.nameCn;
-    detailName.textContent = detailTitle.textContent = rawData.name;
+    detailName.textContent = rawData.name;
 
-    if (rawData.rank && rawData.score) {
-        detailRankScore.innerHTML = `${wordBlock(rawData.rank, null, '排名') + wordBlock(rawData.score, null, '评分')}`;
-    } else if (rawData.rank) {
-        detailRankScore.innerHTML = wordBlock(rawData.rank, null, '排名');
-    } else if (rawData.score) {
-        detailRankScore.innerHTML = wordBlock(rawData.score, null, '评分');
-    }
+    // loading
+    detailDesp.innerHTML = wordBlock('正在从 Bangumi 获取数据...');
 
+    // selected item to globel
     rawDataofSelectedItem = rawData;
     detailLayer.classList.add('open');
 
-    window.mune_opening = false;
+    (async () => {
+        // fetch detail
+        const detailData = await (await request(`/v0/subjects/${rawData.id}`, 'GET', false, null)).json();
+        const detailObj = getItemDetail(detailData);
+
+        const summary = (detailObj.summary && detailObj.summary !== '') ? detailObj.summary.trim() : false;
+        // remove duplicates
+        const metaTags = [...(new Set(detailObj.metaTags))].map(e => wordBlock(e, 'META', null, 'tag'));
+        const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count, null, 'tag'));
+        // K-V
+        const infoBox = (detailObj.infobox ?? []).map(e => {
+            if (e.value !== '*') {
+                return wordBlock((typeof e.value === 'string' ? e.value : JSON.stringify(e.value)), null, e.key, 'info');
+            }
+        });
+
+        detailDesp.innerHTML = [
+            rawData.rank ? wordBlock(rawData.rank, null, '排名') : '',
+            rawData.score ? wordBlock(rawData.score, null, '评分') : '',
+            detailObj.date ? wordBlock(detailObj.date, null, '放送开始') : '',
+            detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '话数') : '',
+            detailObj.platform ? wordBlock(detailObj.platform, null, '平台') : '',
+            wordBlock(rawData.id, null, 'ID'),
+            wordBlock('', null, inCollStatus),
+            '<br>',
+            metaTags.join(''),
+            metaTags.length !== 0 ? '<br>' : '',
+            tags.join(''),
+            tags.length !== 0 ? '<br>' : '',
+            summary ? wordBlock(summary, null, '简介') : '',
+            summary ? '<br>' : '',
+            infoBox.join('<br>'),
+        ].join('');
+
+        // 
+        // rander over
+        // 
+        window.mune_opening = false;
+        loadFinished();
+    })();
 
     function wordBlock(content, tail, head, className) {
         return `<div class="word_block ${className ?? ''}">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
@@ -372,12 +390,12 @@ async function openCollOptionsMenu(rawData) {
             // summary: String
         };
     }
-    loadFinished();
 }
 
-function closeCollOptionsMenu() {
+function closeDetailMenu() {
     detailLayer.classList.remove('open');
 
+    // clean up
     window.clear_menu_timer = setTimeout(() => {
         detailCover.src = detailBlurBg.src = '';
         detailCover.alt = detailBlurBg.alt = '';
@@ -385,13 +403,12 @@ function closeCollOptionsMenu() {
         detailCnname.textContent = '';
         detailName.textContent = '';
         detailDesp.innerHTML = '';
-        detailRankScore.innerHTML = '';
     }, 300);
 
+    // prevent misoperation
     rawDataofSelectedItem = null;
 }
 
-// public fn
 async function request(url, method, withAuthorization, body) {
     const options = { method };
     if (withAuthorization) options['headers'] = new Headers({
@@ -431,24 +448,24 @@ async function refreshUserData(isRandering) {
 }
 
 {
-    detailLayer.addEventListener('click', closeCollOptionsMenu);
+    detailLayer.addEventListener('click', closeDetailMenu);
 
     detailContainer.addEventListener('click', e => e.stopPropagation());
 
-    closeMenuBtn.addEventListener('click', closeCollOptionsMenu);
+    closeMenuBtn.addEventListener('click', closeDetailMenu);
 
     for (const ele of document.querySelectorAll('#menu_box div.box_item')) {
         ele.addEventListener('click', async function (e) {
             e.stopPropagation();
             if (!rawDataofSelectedItem || !rawDataofSelectedItem.id) return;
-            
+
             // 0: open in bgm.tv
             if (+this.getAttribute('value') === 0) {
                 window.open(`https://bgm.tv/subject/${rawDataofSelectedItem.id}`);
-                closeCollOptionsMenu();
+                closeDetailMenu();
                 return;
             }
-            
+
             startLoading();
 
             try {
@@ -472,7 +489,7 @@ async function refreshUserData(isRandering) {
                 console.error(error);
             }
 
-            closeCollOptionsMenu();
+            closeDetailMenu();
             loadFinished();
         })
     }
@@ -494,11 +511,11 @@ async function refreshUserData(isRandering) {
         for (const a of document.querySelectorAll('#search_results a.list_item')) {
             a.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                openCollOptionsMenu(a.rawData);
+                openDetailMenu(a.rawData);
             })
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                openCollOptionsMenu(a.rawData);
+                openDetailMenu(a.rawData);
             })
         }
 

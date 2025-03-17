@@ -6,12 +6,12 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
 
     background-color: #0006;
-    transition: .2s ease-out;
+    transition: opacity .15s ease-out;
 
     display: flex;
     align-items: center;
@@ -28,7 +28,7 @@
         box-shadow: 0 10px 40px #0004;
         background-color: #888;
         border-radius: 12px;
-        max-width: min(98%, 880px);
+        width: min(100%, 880px);
 
         display: flex;
         flex-direction: column;
@@ -108,6 +108,7 @@
     
             &>#item_detail {
                 position: relative;
+                width: 100%;
 
                 display: grid;
                 grid-template-columns: 1fr 3fr;
@@ -129,6 +130,7 @@
                 
                 &>#item_detail_info {
                     padding: 6px 0 6px 6px;
+                    height: 60vh;
                     overflow-x: hidden;
                     overflow-y: scroll;
                     overscroll-behavior: contain;
@@ -164,8 +166,6 @@
                             box-shadow: 0 1px 1.5px var(--skyblue-A);
                             color: var(--skyblue);
                         }
-
-                        /* &.info {} */
 
                         &>.word_block_head {
                             color: var(--themecolor);
