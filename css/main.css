@@ -12,10 +12,13 @@
     --deepcyan: #02889f;
     --deepcyan-A: #02889f2e;
     --deepcyan-AA: #02889f1f;
+    --pink: #E98E8E;
+    --pink-A: #E98E8E2e;
+    --pink-AA: #E98E8E1f;
 
-    --themecolor: var(--deepcyan);
-    --themecolor-A: var(--deepcyan-A);
-    --themecolor-AA: var(--deepcyan-AA);
+    --themecolor: var(--pink);
+    --themecolor-A: var(--pink-A);
+    --themecolor-AA: var(--pink-AA);
 
     --cyan: #13cdcd;
     --golden: #dda900;
@@ -317,8 +320,8 @@ section.card {
     transition: all .2s ease-out;
 
     /* normal */
-    background: linear-gradient(to right, var(--themecolor-AA) 20%, #fff);
-    border: var(--length-6s) solid var(--themecolor-AA);
+    background: linear-gradient(to right, var(--skyblue-AA) 20%, #fff);
+    border: var(--length-6s) solid var(--skyblue-AA);
 
     &:last-of-type {
         margin-bottom: 0;
@@ -352,7 +355,7 @@ section.card {
     }
 
     &:hover {
-        border: var(--length-6s) solid var(--themecolor);
+        border: var(--length-6s) solid var(--skyblue);
 
         &[quality="high"] {
             border: var(--length-6s) solid var(--golden);
@@ -363,7 +366,7 @@ section.card {
         }
 
         &>img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
     }
 
