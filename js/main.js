@@ -7,6 +7,7 @@ const LSKeys = {
 };
 const baseUrl = 'https://api.bgm.tv';
 const CollTypeDisplayArr = [null, '想看', '看过', '在看', '搁置', '抛弃'];
+const CaleDisplayArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 
 // ["grid", "small", "common", "medium", "large"];
 const CalendarImageQuality = 'large';
@@ -68,7 +69,10 @@ async function initCalendar() { // Calendar
         }
     }
 
+    // ###
+    // const st = Date.now();
     randerCalender(todayWeekDay);
+    // console.log('randerCalender', Date.now() - st);
 
     // switch event
     weekdayRadios.forEach(ele => {
@@ -78,7 +82,10 @@ async function initCalendar() { // Calendar
         ele.addEventListener('change', () => {
             for (const ele of weekdayRadios) {
                 if (ele.checked) {
+                    // ###
+                    // const st = Date.now();
                     randerCalender(+ele.value);
+                    // console.log('randerCalender', Date.now() - st);
                     break;
                 }
             }
@@ -101,19 +108,14 @@ function randerCalender(dayCode) {
         calendarWrapperEle.appendChild(createImageItems(o));
     }
 
-    // bind event
+    // bind events
     for (const a of document.querySelectorAll('#calendar_wrapper a.image_items')) {
-        a.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-            openDetailMenu(a.rawData);
-        })
         a.addEventListener('click', function (e) {
             e.preventDefault();
             openDetailMenu(a.rawData);
         })
     }
 
-    // const score = obj['rating'] ? obj['rating']['score'] : false;
     function createImageItems(structData) {
         let eleTitle = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`
         eleTitle += structData.rank ? `\n排名：${structData.rank}` : '';
@@ -121,7 +123,7 @@ function randerCalender(dayCode) {
 
         const aEle = document.createElement('a');
         aEle.classList.add('image_items');
-        // aEle.href = `http://bgm.tv/subject/${structData.id}`;
+        aEle.href = 'javascript:void(0);';
         aEle.title = eleTitle;
         aEle.rawData = structData;
 
@@ -186,7 +188,10 @@ async function initCollections(isRefresh) {
     // init
     const collectionType = document.querySelectorAll('input[name="collection-type"]');
 
+    // ###
+    // const st = Date.now();
     randerCollections(cachedCheckedCollArr);
+    // console.log('randerCollections', Date.now() - st);
     for (const ele of collectionType) {
         if (cachedCheckedCollArr.includes(+ele.value)) ele.checked = true;
         else ele.checked = false;
@@ -199,7 +204,11 @@ async function initCollections(isRefresh) {
             for (const ele of collectionType) {
                 if (ele.checked) checkedTypeArr.push(+ele.value);
             }
+            // ###
+            // const st = Date.now();
             randerCollections(checkedTypeArr);
+            // console.log('randerCollections', Date.now() - st);
+
             cachedCheckedCollArr = checkedTypeArr;
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
         })
@@ -220,12 +229,8 @@ function randerCollections(typeArr) {
         );
     }
 
-    // bind contextmenu event
+    // bind events
     for (const a of document.querySelectorAll('#collections_wrapper a.list_item')) {
-        a.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            openDetailMenu(a.rawData);
-        })
         a.addEventListener('click', (e) => {
             e.preventDefault();
             openDetailMenu(a.rawData);
@@ -260,7 +265,7 @@ function createListItems(structData) {
     const aEle = document.createElement('a');
     aEle.classList.add('list_item');
     aEle.setAttribute('quality', quality);
-    // aEle.href = `http://bgm.tv/subject/${structData.id}`;
+    aEle.href = 'javascript:void(0);';
     aEle.title = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`;
     aEle.rawData = structData;
 
@@ -314,6 +319,11 @@ function openDetailMenu(rawData) {
     // search collection, rander status
     const itemInCollIndex = collectionsDataList.findIndex(e => e.id === rawData.id);
     inCollStatus = itemInCollIndex > -1 ? CollTypeDisplayArr[collectionsDataList[itemInCollIndex].inCollType] : '未收藏';
+
+    // search collection, rander status
+    const itemInCaleIndex = calenderDataList.findIndex(e => e.id === rawData.id);
+    inCaleStatus = itemInCaleIndex > -1 ? '放送中 · ' + CaleDisplayArr[calenderDataList[itemInCaleIndex].playWeekDayCode] : '未在放送';
+
     detailTitle.textContent = `${inCollStatus} · ${rawData.name}`;
     detailCover.src = detailBlurBg.src = rawData.imgUrl;
     detailCover.alt = detailBlurBg.alt = rawData.id;
@@ -350,7 +360,9 @@ function openDetailMenu(rawData) {
             detailObj.totalEpisodes ? wordBlock(detailObj.totalEpisodes, null, '话数') : '',
             detailObj.platform ? wordBlock(detailObj.platform, null, '平台') : '',
             wordBlock(rawData.id, null, 'ID'),
+            '<br>',
             wordBlock('', null, inCollStatus),
+            itemInCaleIndex > -1 ? wordBlock('', null, inCaleStatus) : wordBlock(inCaleStatus),
             '<br>',
             metaTags.join(''),
             metaTags.length !== 0 ? '<br>' : '',
@@ -369,7 +381,7 @@ function openDetailMenu(rawData) {
     })();
 
     function wordBlock(content, tail, head, className) {
-        return `<div class="word_block ${className ?? ''}">${head ? `<span class="word_block_head">${head}</span>` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
+        return `<div class="word_block ${className ?? ''}">${head ? `<span class="word_block_head">${head}</span> ` : ''}${content}${tail ? `<sup class="word_block_tail">${tail}</sup>` : ''}</div>`;
     }
 
     function getItemDetail(data) {
@@ -507,12 +519,12 @@ async function refreshUserData(isRandering) {
         randerGroup(`<div>“${input.value}” · ${children.length}</div><img class="close_btn" src="img/close.svg" alt="">`, children, searchResultsWrapper);
         searchResultsWrapper.querySelector('.close_btn').addEventListener('click', closeSearchResult);
 
-        // bind contextmenu event
+        // bind events
         for (const a of document.querySelectorAll('#search_results a.list_item')) {
-            a.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                openDetailMenu(a.rawData);
-            })
+            // a.addEventListener('contextmenu', (e) => {
+            //     e.preventDefault();
+            //     openDetailMenu(a.rawData);
+            // })
             a.addEventListener('click', (e) => {
                 e.preventDefault();
                 openDetailMenu(a.rawData);

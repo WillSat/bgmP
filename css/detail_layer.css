@@ -169,8 +169,7 @@
 
                         &>.word_block_head {
                             color: var(--themecolor);
-                            font-family: serif;
-                            padding: 0 4px 0 0;
+                            font-weight: bolder;
 
                             &::selection {
                                 background-color: var(--themecolor-A) !important;

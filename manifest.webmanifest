@@ -1,0 +1,15 @@
+{
+    "name": "bangumiP",
+    "short_name": "bgmP",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#EEEEEE",
+    "description": "",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
