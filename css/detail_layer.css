@@ -11,7 +11,7 @@
     overflow: hidden;
 
     background-color: #0006;
-    transition: opacity .15s ease-out;
+    transition: opacity .2s ease-out;
 
     display: flex;
     flex-direction: column;
@@ -253,10 +253,6 @@
 
     @media screen and (orientation: portrait) {
         gap: unset;
-
-        &>#detail_container {
-            height: calc(100vh - 34px);
-        }
 
         &>#detail_container,
         &>#menu_box {
