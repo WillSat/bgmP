@@ -14,27 +14,33 @@
     transition: opacity .15s ease-out;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 6px;
 
     &.open {
         pointer-events: auto;
         opacity: 1;
     }
 
-    &>#detail_container {
+    &>#detail_container,
+    &>#menu_box {
         position: relative;
-
         box-shadow: 0 10px 40px #0004;
         background-color: #888;
-        border-radius: 12px;
         width: min(100%, 880px);
+        border-radius: 12px;
+
+        overflow: hidden;
+    }
+
+    &>#detail_container {
+        height: min(70vh, calc(100vh - 36px));
 
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-
-        overflow: hidden;
 
         &>img#detail_blurbg {
             position: absolute;
@@ -57,6 +63,7 @@
             padding: 8px;
 
             width: 100%;
+            height: 100%;
 
             overflow: hidden;
             background-color: #fff8;
@@ -64,6 +71,7 @@
 
             &>#detail_title {
                 position: relative;
+                height: 24px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
@@ -108,6 +116,7 @@
     
             &>#item_detail {
                 position: relative;
+                height: calc(100% - 30px);
                 width: 100%;
 
                 display: grid;
@@ -120,7 +129,7 @@
                     width: 100%;
                     border-radius: 6px;
                     box-sizing: border-box;
-                    max-height: 60vh;
+                    /* max-height: 60vh; */
                     backdrop-filter: brightness(1.1);
                 }
                 
@@ -130,7 +139,7 @@
                 
                 &>#item_detail_info {
                     padding: 6px 0 6px 6px;
-                    height: 60vh;
+                    /* height: 60vh; */
                     overflow-x: hidden;
                     overflow-y: scroll;
                     overscroll-behavior: contain;
@@ -194,50 +203,65 @@
                 }
             }
     
-            &>#menu_box {
-                position: relative;
-                width: 100%;
-                height: 34px;
-                box-sizing: border-box;
-    
-                display: flex;
-                align-items: center;
-                justify-content: space-evenly;
-                flex-direction: row;
-    
-                overflow: hidden;
-    
-                &>.box_item {
-                    -webkit-user-select: none;
-                    user-select: none;
-                    flex-grow: 1;
-                    box-sizing: border-box;
-                    height: 100%;
-                    font-size: 1rem;
-    
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-    
-                    font-weight: bold;
-                    color: #000c;
-                    transition: all .1s ease-out;
-    
-                    &:hover {
-                        backdrop-filter: brightness(1.3);
-                        color: #000;
-                        border-radius: 6px;
-                    }
-    
-                    &[value="5"] {
-                        color: #911;
-                    }
-    
-                    &[value="0"] {
-                        color: #048;
-                    }
-                }
+        }
+    }
+
+    &>#menu_box {
+        height: 34px;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+
+        background-color: #ffffff55;
+        backdrop-filter: blur(70px) brightness(1.1);
+
+        &>.box_item {
+            -webkit-user-select: none;
+            user-select: none;
+            flex-grow: 1;
+            box-sizing: border-box;
+            height: 100%;
+            font-size: 1rem;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+            color: #000c;
+            transition: all .1s ease-out;
+
+            &:hover {
+                backdrop-filter: brightness(1.3);
+                background-color: #ffffff11;
+                color: #000;
             }
+
+            &[value="5"] {
+                color: #911;
+            }
+
+            &[value="0"] {
+                color: #048;
+            }
+        }
+    }
+
+    @media screen and (orientation: portrait) {
+        gap: unset;
+
+        &>#detail_container {
+            height: calc(100vh - 34px);
+        }
+
+        &>#detail_container,
+        &>#menu_box {
+            border-radius: 0;
+            width: 100%;
         }
     }
 }
