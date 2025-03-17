@@ -158,12 +158,12 @@ function randerCalender(dayCode) {
 
 // Collections
 async function initCollections(isRefresh) {
-    startLoading();
     if (!accessToken) {
         // log out
         collectionsWrapperEle.innerHTML = '';
         return;
     }
+    startLoading();
     if (!userData || isRefresh) await refreshUserData();
     const firstResqust = await ((await request(`/v0/users/${userData['username']}/collections?limit=${CollectionsPreRequest}&offset=0`, 'GET', true)).json());
 
