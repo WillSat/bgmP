@@ -153,8 +153,11 @@ section.card {
         border-bottom: var(--length-6s) solid var(--border-color);
         padding: var(--length-s);
 
-        overflow: auto;
+        overflow-x: auto;
+        white-space: nowrap;
         gap: var(--length-s);
+        
+        scrollbar-width: thin;
 
         &>span {
             box-sizing: content-box;
