@@ -7,7 +7,7 @@ const LSKeys = {
 };
 const baseUrl = 'https://api.bgm.tv';
 const CollTypeDisplayArr = [null, '想看', '看过', '在看', '搁置', '抛弃'];
-const CaleDisplayArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+const CaleDisplayArr = [null, '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 
 // ["grid", "small", "common", "medium", "large"];
 const CalendarImageQuality = 'large';
