@@ -4,7 +4,7 @@
     "start_url": ".",
     "display": "standalone",
     "background_color": "#EEEEEE",
-    "description": "",
+    "description": "一个 Bangumi 第三方平台。可以进行一些简单的操作",
     "icons": [
         {
             "src": "favicon.png",

@@ -123,7 +123,7 @@ function randerCalender(dayCode) {
 
         const aEle = document.createElement('a');
         aEle.classList.add('image_items');
-        aEle.href = 'javascript:void(0);';
+        // aEle.href = 'javascript:void(0);';
         aEle.title = eleTitle;
         aEle.rawData = structData;
 
@@ -265,7 +265,7 @@ function createListItems(structData) {
     const aEle = document.createElement('a');
     aEle.classList.add('list_item');
     aEle.setAttribute('quality', quality);
-    aEle.href = 'javascript:void(0);';
+    // aEle.href = 'javascript:void(0);';
     aEle.title = `${structData.nameCn ? structData.nameCn + '\n' : ''}${structData.name}\nID: ${structData.id}`;
     aEle.rawData = structData;
 
