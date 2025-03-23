@@ -71,7 +71,8 @@
 
             &>#detail_title {
                 position: relative;
-                height: 24px;
+                flex-shrink: 0;
+                height: 22px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
@@ -252,7 +253,7 @@
     }
 
     @media screen and (orientation: portrait) {
-        gap: unset;
+        gap: 0;
 
         &>#detail_container,
         &>#menu_box {
