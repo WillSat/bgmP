@@ -47,6 +47,12 @@
             font-size: 14px;
         }
     }
+
+    @media (max-width: 450px) {
+        & {
+            font-size: 12px;
+        }
+    }
 }
 
 

@@ -5,7 +5,8 @@ const LSKeys = {
     bgmUserData: 'bangumi_user_data',
     displayCollectionsTypeArr: 'display_collections_type_arr'
 };
-const baseUrl = 'https://api.bgm.tv';
+const bgmApiBaseUrl = 'https://api.bgm.tv';
+const moegirlBaseUrl = 'https://mzh.moegirl.org.cn/index.php';
 const CollTypeDisplayArr = [null, '想看', '看过', '在看', '搁置', '抛弃'];
 const CaleDisplayArr = [null, '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 
@@ -429,7 +430,7 @@ async function request(url, method, withAuthorization, body) {
     });
     if (body) options['body'] = JSON.stringify(body);
 
-    return await fetch(baseUrl + url, options);
+    return await fetch(bgmApiBaseUrl + url, options);
 }
 
 async function refreshUserData(isRandering) {
@@ -470,6 +471,16 @@ async function refreshUserData(isRandering) {
         ele.addEventListener('click', async function (e) {
             e.stopPropagation();
             if (!rawDataofSelectedItem || !rawDataofSelectedItem.id) return;
+
+            const realName = rawDataofSelectedItem.nameCn && rawDataofSelectedItem.nameCn !== ''
+                ? rawDataofSelectedItem.nameCn : rawDataofSelectedItem.name;
+
+            // 0: open in 
+            if (+this.getAttribute('value') === -1) {
+                window.open(`${moegirlBaseUrl}?search=${realName}`);
+                closeDetailMenu();
+                return;
+            }
 
             // 0: open in bgm.tv
             if (+this.getAttribute('value') === 0) {
@@ -521,10 +532,6 @@ async function refreshUserData(isRandering) {
 
         // bind events
         for (const a of document.querySelectorAll('#search_results a.list_item')) {
-            // a.addEventListener('contextmenu', (e) => {
-            //     e.preventDefault();
-            //     openDetailMenu(a.rawData);
-            // })
             a.addEventListener('click', (e) => {
                 e.preventDefault();
                 openDetailMenu(a.rawData);
