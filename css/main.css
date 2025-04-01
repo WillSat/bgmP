@@ -42,9 +42,15 @@
 
     font-size: 16px;
 
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
         & {
             font-size: 14px;
+        }
+    }
+
+    @media (max-width: 650px) {
+        & {
+            font-size: 13px;
         }
     }
 
@@ -175,13 +181,9 @@ section.card {
     &>.image_items_container {
         position: relative;
         width: 100%;
-        max-height: 50%;
+        font-size: 0;
         box-sizing: border-box;
-        padding: var(--length-s);
-
-        columns: 9rem auto;
-        column-gap: var(--length-s);
-        break-inside: avoid;
+        padding: calc(var(--length-s) / 2);
 
         overflow: auto;
     }
@@ -190,33 +192,27 @@ section.card {
         position: relative;
         width: 100%;
         box-sizing: border-box;
-        padding: 0 var(--length-s) var(--length-s) var(--length-s);
-        overflow: auto;
-
+        padding: calc(var(--length-s) / 2);
+        
         &>.list_subtitle {
-            width: 100%;
+            width: calc(100% - var(--length-s));
             font-weight: bold;
             color: var(--themecolor);
             box-sizing: border-box;
-            padding: var(--length-2s) 0;
+            margin: calc(var(--length-s) / 2);
             font-size: 1rem;
             -webkit-user-select: none;
             user-select: none;
         }
-
+        
         &>.scoll_wrapper {
-            max-height: 60vh;
-            overflow-y: scroll;
+            max-height: 55vh;
+            overflow-y: auto;
             scrollbar-width: thin;
-
-            scroll-snap-type: y mandatory;
-
+            box-sizing: border-box;
+            
             &>.list_group {
-                padding: 0;
-
-                columns: 18rem auto;
-                column-gap: var(--length-s);
-                break-inside: avoid;
+                font-size: 0;
             }
         }
     }
@@ -225,19 +221,16 @@ section.card {
 
 .image_items {
     position: relative;
-    margin-bottom: var(--length-s);
+    margin: calc(var(--length-s) / 2);
     background: linear-gradient(var(--themecolor-AA), #0006, var(--themecolor-A));
     overflow: hidden;
-    border-radius: var(--length-2s);
-    /* box-shadow: 0 var(--length-4s) var(--length-3s) var(--shadow-color); */
-    border: solid 1px var(--themecolor-A);
+    border-radius: var(--length-s);
     box-sizing: border-box;
     transition: all .2s ease-out;
+    width: min(160px, calc(100% - var(--length-s)));
     aspect-ratio: 0.75;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: inline-block;
 
     &>.desp {
         position: absolute;
@@ -311,17 +304,16 @@ section.card {
 }
 
 .list_item {
-    scroll-snap-align: start;
-
     position: relative;
-    margin-bottom: var(--length-s);
+    margin: calc(var(--length-s) / 2);
     box-sizing: border-box;
+    width: min(320px, calc(100% - var(--length-s)));
     height: 64px;
     overflow: hidden;
     border-radius: var(--length-3s);
     text-decoration: none;
-
-    display: flex;
+    
+    display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
@@ -329,21 +321,14 @@ section.card {
     transition: all .2s ease-out;
 
     /* normal */
-    background: linear-gradient(to right, var(--skyblue-AA) 20%, #fff);
-    border: var(--length-6s) solid var(--skyblue-AA);
-
-    &:last-of-type {
-        margin-bottom: 0;
-    }
+    background: var(--skyblue-AA);
 
     &[quality="high"] {
-        background: linear-gradient(to right, var(--golden-A) 20%, #fff);
-        border: var(--length-6s) solid var(--golden-A);
+        background: var(--golden-A);
     }
 
     &[quality="ex-high"] {
-        background: linear-gradient(to right, var(--red-A) 20%, #fff);
-        border: var(--length-6s) solid var(--red-A);
+        background: var(--red-A);
     }
 
     &>.desp {
@@ -364,14 +349,14 @@ section.card {
     }
 
     &:hover {
-        border: var(--length-6s) solid var(--skyblue);
+        outline: var(--length-6s) solid var(--skyblue);
 
         &[quality="high"] {
-            border: var(--length-6s) solid var(--golden);
+            outline: var(--length-6s) solid var(--golden);
         }
     
         &[quality="ex-high"] {
-            border: var(--length-6s) solid var(--red);
+            outline: var(--length-6s) solid var(--red);
         }
 
         &>img {
