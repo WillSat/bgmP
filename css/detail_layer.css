@@ -17,7 +17,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
 
     &.open {
         pointer-events: auto;
@@ -30,7 +29,7 @@
         box-shadow: 0 10px 40px #0004;
         background-color: #888;
         width: min(100%, 880px);
-        border-radius: 12px;
+        border-radius: 0 0 12px 12px;
 
         overflow: hidden;
     }
@@ -41,6 +40,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        border-radius: 12px 12px 0 0;
 
         &>img#detail_blurbg {
             position: absolute;
@@ -216,7 +216,7 @@
         align-items: center;
         justify-content: space-evenly;
 
-        background-color: #ffffff55;
+        background-color: #ffffff70;
         backdrop-filter: blur(70px) brightness(1.1);
 
         &>.box_item {
@@ -257,8 +257,6 @@
     }
 
     @media screen and (orientation: portrait) {
-        gap: 0;
-
         &>#detail_container,
         &>#menu_box {
             border-radius: 0;
