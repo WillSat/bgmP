@@ -70,10 +70,7 @@ async function initCalendar() { // Calendar
         }
     }
 
-    // ###
-    // const st = Date.now();
     randerCalender(todayWeekDay);
-    // console.log('randerCalender', Date.now() - st);
 
     // switch event
     weekdayRadios.forEach(ele => {
@@ -83,10 +80,7 @@ async function initCalendar() { // Calendar
         ele.addEventListener('change', () => {
             for (const ele of weekdayRadios) {
                 if (ele.checked) {
-                    // ###
-                    // const st = Date.now();
                     randerCalender(+ele.value);
-                    // console.log('randerCalender', Date.now() - st);
                     break;
                 }
             }
@@ -124,7 +118,6 @@ function randerCalender(dayCode) {
 
         const aEle = document.createElement('a');
         aEle.classList.add('image_items');
-        // aEle.href = 'javascript:void(0);';
         aEle.title = eleTitle;
         aEle.rawData = structData;
 
@@ -143,14 +136,14 @@ function randerCalender(dayCode) {
         if (structData.rank) {
             const rankEle = document.createElement('div');
             rankEle.classList.add('rank');
-            rankEle.innerHTML = structData.rank;
+            rankEle.textContent = `#${structData.rank}`;
             aEle.appendChild(rankEle);
         }
 
         if (structData.score) {
             const scoreEle = document.createElement('div');
             scoreEle.classList.add('score');
-            scoreEle.innerHTML = structData.score;
+            scoreEle.textContent = structData.score;
             aEle.appendChild(scoreEle);
         }
         return aEle;
@@ -205,10 +198,7 @@ async function initCollections(isRefresh) {
             for (const ele of collectionType) {
                 if (ele.checked) checkedTypeArr.push(+ele.value);
             }
-            // ###
-            // const st = Date.now();
             randerCollections(checkedTypeArr);
-            // console.log('randerCollections', Date.now() - st);
 
             cachedCheckedCollArr = checkedTypeArr;
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
@@ -289,14 +279,14 @@ function createListItems(structData) {
         if (structData.rank) {
             const rankEle = document.createElement('div');
             rankEle.classList.add('rank');
-            rankEle.innerHTML = structData.rank;
+            rankEle.textContent = `#${structData.rank}`;
             tailEle.appendChild(rankEle);
         }
 
         if (structData.score) {
             const scoreEle = document.createElement('div');
             scoreEle.classList.add('score');
-            scoreEle.innerHTML = structData.score;
+            scoreEle.textContent = structData.score;
             tailEle.appendChild(scoreEle);
         }
 

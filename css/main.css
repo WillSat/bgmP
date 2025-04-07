@@ -274,7 +274,7 @@ section.card {
         left: 0;
         font-size: .90rem;
         font-weight: 900;
-        font-style: italic;
+        /* font-style: italic; */
         padding: 0 var(--length-4s);
         color: var(--golden);
         border-radius: 0 0 var(--length-5s) 0;
@@ -378,7 +378,7 @@ section.card {
         &>.score {
             font-size: .85rem;
             font-weight: 900;
-            font-style: italic;
+            /* font-style: italic; */
             padding: 0 var(--length-4s);
             color: var(--golden);
             border-radius: var(--length-3s) 0 0 var(--length-3s);
