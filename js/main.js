@@ -353,7 +353,7 @@ function openDetailMenu(rawData) {
         const infoBox = (detailObj.infobox ?? []).map(e => {
             if (typeof e.value === 'string') {
                 // "*"
-                if (e.value === '*') return wordBlock('* (待完善)', null, e.key, 'info');
+                if (e.value === '*') return wordBlock('* (待完善或省略)', null, e.key, 'info');
                 else return wordBlock(e.value, null, e.key, 'info');
             } else if (e.key === '别名' && Array.isArray(e.value)) {
                 const aliasTempArr = e.value.map(obj => obj['v']);
