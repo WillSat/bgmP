@@ -342,6 +342,8 @@ function openDetailMenu(rawData) {
         // fetch detail
         const detailData = await (await request(`/v0/subjects/${rawData.id}`, 'GET', false, null)).json();
         const detailObj = getItemDetail(detailData);
+        // debug
+        // console.log(detailObj);
 
         const summary = (detailObj.summary && detailObj.summary !== '') ? detailObj.summary.trim() : false;
         // remove duplicates
@@ -349,8 +351,17 @@ function openDetailMenu(rawData) {
         const tags = (detailObj.tags ?? []).filter(e => e.count > 1).map(e => wordBlock(e.name, e.count, null, 'tag'));
         // K-V
         const infoBox = (detailObj.infobox ?? []).map(e => {
-            if (e.value !== '*') {
-                return wordBlock((typeof e.value === 'string' ? e.value : JSON.stringify(e.value)), null, e.key, 'info');
+            if (typeof e.value === 'string') {
+                // "*"
+                if (e.value === '*') return wordBlock('* (待完善)', null, e.key, 'info');
+                else return wordBlock(e.value, null, e.key, 'info');
+            } else if (e.key === '别名' && Array.isArray(e.value)) {
+                const aliasTempArr = e.value.map(obj => obj['v']);
+                if (aliasTempArr.length === 1) {
+                    return wordBlock(aliasTempArr.join('<br>'), null, e.key, 'info');
+                } else {
+                    return wordBlock('<br>' + aliasTempArr.join('<br>'), null, e.key, 'info');
+                }
             }
         });
 
@@ -369,7 +380,7 @@ function openDetailMenu(rawData) {
             metaTags.length !== 0 ? '<br>' : '',
             tags.join(''),
             tags.length !== 0 ? '<br>' : '',
-            summary ? wordBlock(summary, null, '简介') : '',
+            summary ? wordBlock('<br>' + summary, null, '简介') : '',
             summary ? '<br>' : '',
             infoBox.join('<br>'),
         ].join('');
