@@ -322,7 +322,7 @@ function openDetailMenu(rawData) {
     detailName.textContent = rawData.name;
 
     // loading
-    detailDesp.innerHTML = wordBlock('正在从 Bangumi 获取数据...');
+    detailDesp.innerHTML = wordBlock('正在从 Bangumi 请求数据...');
 
     // selected item to globel
     rawDataofSelectedItem = rawData;
@@ -343,7 +343,8 @@ function openDetailMenu(rawData) {
         const infoBox = (detailObj.infobox ?? []).map(e => {
             if (typeof e.value === 'string') {
                 // "*"
-                if (e.value === '*') return wordBlock('* (待完善或省略)', null, e.key, 'info');
+                if (e.value === '*') return wordBlock('(待完善或省略)', null, e.key, 'info');
+                if (e.key === '官方网站') return wordBlock(`<a href="${e.value}">${e.value}</a>`, null, e.key, 'info');
                 else return wordBlock(e.value, null, e.key, 'info');
             } else if (e.key === '别名' && Array.isArray(e.value)) {
                 const aliasTempArr = e.value.map(obj => obj['v']);
