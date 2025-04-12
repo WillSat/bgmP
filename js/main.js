@@ -51,8 +51,8 @@ function buildStructData(id, name, nameCn, imgUrl, rank, score, playWeekDayCode,
 }
 
 function sortStructData(a, b) {
-    if (a.rank && b.rank) return a.rank > b.rank;
-    else return b.rank;
+    if (a.score && b.score) return a.score < b.score;
+    else return b.score ? true : false;
 }
 
 async function initCalendar() { // Calendar
