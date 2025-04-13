@@ -182,10 +182,7 @@ async function initCollections(isRefresh) {
     // init
     const collectionType = document.querySelectorAll('input[name="collection-type"]');
 
-    // ###
-    // const st = Date.now();
     randerCollections(cachedCheckedCollArr);
-    // console.log('randerCollections', Date.now() - st);
     for (const ele of collectionType) {
         if (cachedCheckedCollArr.includes(+ele.value)) ele.checked = true;
         else ele.checked = false;
@@ -272,7 +269,7 @@ function createListItems(structData) {
     despEle.innerHTML += `<div class="name">${structData.name}</div></div>`;
     aEle.appendChild(despEle);
 
-    if (structData.rank || structData.rank) {
+    if (structData.rank || structData.score) {
         const tailEle = document.createElement('div');
         tailEle.classList.add('tail');
 
