@@ -84,7 +84,7 @@ async function initCalendar() { // Calendar
             }
         })
     });
-    
+
 }
 
 function randerCalender(dayCode) {
@@ -156,7 +156,11 @@ async function initCollections(isRefresh) {
         collectionsWrapperEle.innerHTML = '';
         return;
     }
-    if (!userData || isRefresh) await refreshUserData();
+    if (!userData || isRefresh) {
+        console.warn('Broken Access Token.');
+        collectionsWrapperEle.innerHTML = '';
+        if (await refreshUserData() ? false : true) return;
+    }
     const firstResqust = await ((await request(`/v0/users/${userData['username']}/collections?limit=${CollectionsPreRequest}&offset=0`, 'GET', true)).json());
 
     pushData(firstResqust['data']);
@@ -325,8 +329,6 @@ function openDetailMenu(rawData) {
         // fetch detail
         const detailData = await (await request(`/v0/subjects/${rawData.id}`, 'GET', false, null)).json();
         const detailObj = getItemDetail(detailData);
-        // debug
-        // console.log(detailObj);
 
         const summary = (detailObj.summary && detailObj.summary !== '') ? detailObj.summary.trim() : false;
         // remove duplicates
@@ -373,7 +375,7 @@ function openDetailMenu(rawData) {
         // rander over
         // 
         window.mune_opening = false;
-        
+
     })();
 
     function wordBlock(content, tail, head, className) {
@@ -439,46 +441,55 @@ async function request(url, method, withAuthorization, body) {
     function startLoading() {
         if (window.loading_counter) window.loading_counter += 1;
         else window.loading_counter = 1;
-    
+
         loadingLayer.style.display = '';
     }
-    
+
     function loadFinished() {
         window.loading_counter -= 1;
         if (window.loading_counter > 0) return;
-    
+
         loadingLayer.style.display = 'none';
     }
 }
 
 async function refreshUserData(isRandering) {
-    const res = await ((await request('/v0/me', 'GET', true)).json());
-    if (res['id']) {
-        userData = res;
-        localStorage.setItem(LSKeys.bgmUserData, JSON.stringify(userData));
-        randerUserData(userData);
+    const r = await request('/v0/me', 'GET', true);
 
-        if (isRandering) initCollections();
+    if (r.ok) {
+        const res = await r.json();
+        if (res['id']) {
+            userData = res;
+            randerUserData(userData);
+            localStorage.setItem(LSKeys.bgmUserData, JSON.stringify(userData));
+            if (isRandering) initCollections();
+            return true;
+        }
+    } else {
+        console.warn('FN refreshUserData: Broken Access Token.');
+        userData = null;
+        localStorage.setItem(LSKeys.bgmUserData, null);
+        localStorage.setItem(LSKeys.bgmAccessToken, null);
+        window.location.hash = '';
     }
-    else {
-        randerUserData();
-    } 
+    randerUserData(null);
 }
 
 function randerUserData(userData) {
     const userInfoEle = document.getElementById('user_info');
     const userNameEle = document.getElementById('user_name');
     const userAvatarEle = document.getElementById('user_avatar');
-    
+
     if (userData) {
-        const userInfo = `昵称：${userData['username']}\n签名：${userData['sign'] === '' ? '（无）' : userData['sign']}\nID：${userData['id']}\n注册时间：${userData['reg_time']}\n邮箱：${userData['email']}`;
+        const userInfo = `昵称：${userData['username']}\n签名：${userData['sign'] === '' ? '（无）' : userData['sign']}\nID：${userData['id']}\n注册时间：${userData['reg_time']}\n邮箱：${userData['email']}\n\n更改网址 # 后内容更改登录，清空则登出`;
 
         userNameEle.textContent = userData['username'];
         userAvatarEle.src = userData['avatar']['large'];
         userInfoEle.title = userInfo;
     } else {
-        userNameEle.textContent = '未登录';
-        userAvatarEle.src = 'img/default_avatar.png';
+        userNameEle.textContent = '';
+        userAvatarEle.src = 'img/default_avatar.svg';
+        userInfoEle.title = '更改网址 # 后内容更改登录，清空则登出';
     }
 }
 
@@ -617,5 +628,6 @@ function randerUserData(userData) {
             }
             openSearchResult(tempArr);
         })
+
     });
 }
