@@ -152,12 +152,12 @@ function randerCalender(dayCode) {
 async function initCollections(isRefresh) {
     if (window.location.hash === '') {
         // log out
-        console.info('Log out.');
+        console.info('FN initCollections: Log out.');
         collectionsWrapperEle.innerHTML = '';
         return;
     }
     if (!userData || isRefresh) {
-        console.warn('Broken Access Token.');
+        console.warn('FN initCollections: Broken Access Token.');
         collectionsWrapperEle.innerHTML = '';
         if (await refreshUserData() ? false : true) return;
     }
