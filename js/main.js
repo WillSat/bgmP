@@ -17,7 +17,6 @@ const CollectionsPreRequest = 100;
 const SearchResultPreRequest = 25;
 
 // VAR
-let accessToken = localStorage.getItem(LSKeys.bgmAccessToken);
 let userData = JSON.parse(localStorage.getItem(LSKeys.bgmUserData));
 let cachedCheckedCollArr = JSON.parse(localStorage.getItem(LSKeys.displayCollectionsTypeArr)) ?? [3, 1];
 let calenderDataList = [];
@@ -42,7 +41,7 @@ const loadingLayer = document.getElementById('loading_layer');
 const loadingBox = document.getElementById('loading_box');
 
 initCalendar();
-initCollections();
+randerUserData(userData);
 
 let rawDataofSelectedItem;
 
@@ -56,7 +55,6 @@ function sortStructData(a, b) {
 }
 
 async function initCalendar() { // Calendar
-    startLoading();
     const todayWeekDay = [7, 1, 2, 3, 4, 5, 6][(new Date()).getDay()];
     const weekdayRadios = document.querySelectorAll('input[name="calendar-weekday"]');
 
@@ -86,7 +84,7 @@ async function initCalendar() { // Calendar
             }
         })
     });
-    loadFinished();
+    
 }
 
 function randerCalender(dayCode) {
@@ -152,12 +150,12 @@ function randerCalender(dayCode) {
 
 // Collections
 async function initCollections(isRefresh) {
-    if (!accessToken) {
+    if (window.location.hash === '') {
         // log out
+        console.info('Log out.');
         collectionsWrapperEle.innerHTML = '';
         return;
     }
-    startLoading();
     if (!userData || isRefresh) await refreshUserData();
     const firstResqust = await ((await request(`/v0/users/${userData['username']}/collections?limit=${CollectionsPreRequest}&offset=0`, 'GET', true)).json());
 
@@ -201,7 +199,6 @@ async function initCollections(isRefresh) {
             localStorage.setItem(LSKeys.displayCollectionsTypeArr, JSON.stringify(checkedTypeArr));
         })
     });
-    loadFinished();
 }
 
 function randerCollections(typeArr) {
@@ -296,7 +293,6 @@ function createListItems(structData) {
 function openDetailMenu(rawData) {
     if (window.mune_opening) return;
     window.mune_opening = true;
-    startLoading();
 
     if (window.clear_menu_timer) clearTimeout(window.clear_menu_timer);
 
@@ -377,7 +373,7 @@ function openDetailMenu(rawData) {
         // rander over
         // 
         window.mune_opening = false;
-        loadFinished();
+        
     })();
 
     function wordBlock(content, tail, head, className) {
@@ -422,14 +418,37 @@ function closeDetailMenu() {
 }
 
 async function request(url, method, withAuthorization, body) {
+    startLoading();
     const options = { method };
     if (withAuthorization) options['headers'] = new Headers({
-        'Authorization': `Bearer ${accessToken}`,
+        'Authorization': `Bearer ${window.location.hash.substring(1)}`,
         'Content-Type': "application/json"
     });
     if (body) options['body'] = JSON.stringify(body);
 
-    return await fetch(bgmApiBaseUrl + url, options);
+    try {
+        const res = await fetch(bgmApiBaseUrl + url, options);
+        loadFinished();
+        return res;
+    } catch (error) {
+        console.error('Request failed: ', error);
+        loadFinished();
+        return null;
+    }
+
+    function startLoading() {
+        if (window.loading_counter) window.loading_counter += 1;
+        else window.loading_counter = 1;
+    
+        loadingLayer.style.display = '';
+    }
+    
+    function loadFinished() {
+        window.loading_counter -= 1;
+        if (window.loading_counter > 0) return;
+    
+        loadingLayer.style.display = 'none';
+    }
 }
 
 async function refreshUserData(isRandering) {
@@ -437,28 +456,55 @@ async function refreshUserData(isRandering) {
     if (res['id']) {
         userData = res;
         localStorage.setItem(LSKeys.bgmUserData, JSON.stringify(userData));
+        randerUserData(userData);
 
         if (isRandering) initCollections();
+    }
+    else {
+        randerUserData();
+    } 
+}
+
+function randerUserData(userData) {
+    const userInfoEle = document.getElementById('user_info');
+    const userNameEle = document.getElementById('user_name');
+    const userAvatarEle = document.getElementById('user_avatar');
+    
+    if (userData) {
+        const userInfo = `昵称：${userData['username']}\n签名：${userData['sign'] === '' ? '（无）' : userData['sign']}\nID：${userData['id']}\n注册时间：${userData['reg_time']}\n邮箱：${userData['email']}`;
+
+        userNameEle.textContent = userData['username'];
+        userAvatarEle.src = userData['avatar']['large'];
+        userInfoEle.title = userInfo;
+    } else {
+        userNameEle.textContent = '未登录';
+        userAvatarEle.src = 'img/default_avatar.png';
     }
 }
 
 { // Access Token
-    const input = document.getElementById('access_token_inupt');
-    // init
-    if (accessToken !== null) {
-        input.value = accessToken;
-        window.location.hash = accessToken;
-    }
-
-    input.addEventListener('change', function () {
-        accessToken = this.value;
-        window.location.hash = accessToken;
-        localStorage.setItem(LSKeys.bgmAccessToken, accessToken);
+    window.addEventListener("hashchange", () => {
+        localStorage.setItem(LSKeys.bgmAccessToken, window.location.hash);
 
         // refresh
         collectionsDataList = [];
         initCollections(true);
-    })
+    }, false);
+
+
+    const cachedAT = localStorage.getItem(LSKeys.bgmAccessToken);
+    console.log('cachedAT:', cachedAT, 'window.location.hash:', window.location.hash);
+
+    if (window.location.hash !== '') {
+        initCollections(cachedAT === window.location.hash ? false : true);
+        localStorage.setItem(LSKeys.bgmAccessToken, window.location.hash);
+    } else if (cachedAT !== null && cachedAT !== '') {
+        window.location.hash = localStorage.getItem(LSKeys.bgmAccessToken);
+    } else {
+        window.location.hash = prompt(
+            '输入您的 Bangumi Access Token，留空则不使用登录功能。您也可以手动更改 URL 的 hash 值实现登录。'
+        ) ?? '';
+    }
 }
 
 {
@@ -490,8 +536,6 @@ async function refreshUserData(isRandering) {
                 return;
             }
 
-            startLoading();
-
             try {
                 await request(
                     `/v0/users/-/collections/${rawDataofSelectedItem.id}`,
@@ -514,7 +558,6 @@ async function refreshUserData(isRandering) {
             }
 
             closeDetailMenu();
-            loadFinished();
         })
     }
 }
@@ -558,8 +601,6 @@ async function refreshUserData(isRandering) {
             return;
         }
 
-        startLoading();
-
         request(
             `/search/subject/${input.value}?type=2&responseGroup=large&max_results=${SearchResultPreRequest}`,
             'GET',
@@ -575,21 +616,6 @@ async function refreshUserData(isRandering) {
                 )
             }
             openSearchResult(tempArr);
-            loadFinished();
         })
     });
-}
-
-function startLoading() {
-    if (window.loading_counter) window.loading_counter += 1;
-    else window.loading_counter = 1;
-
-    loadingLayer.style.display = '';
-}
-
-function loadFinished() {
-    window.loading_counter -= 1;
-    if (window.loading_counter > 0) return;
-
-    loadingLayer.style.display = 'none';
 }

@@ -81,12 +81,35 @@ section#title {
 
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: var(--length-s);
 
-    &>* {
-        flex-grow: 1;
+    &>div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        gap: var(--length-s);
+
+        &>#user_avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            -webkit-user-select: none;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        &>#user_name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            -webkit-user-select: none;
+            user-select: none;
+        }
     }
+
 }
 
 input[type="text"],
@@ -103,24 +126,15 @@ div.btn {
     height: 30px;
     font-weight: bold;
     min-width: 20px;
+    max-width: 500px;
     transition: all .1s;
-
-    &#access_token_inupt {
-        flex-grow: .5;
-        filter: blur(3px);
-
-        &:hover,
-        &:focus {
-            filter: blur(0);
-        }
-    }
 
     &#search_btn {
         display: flex;
         align-items: center;
         justify-content: center;
         text-wrap: nowrap;
-        max-width: 50px
+        max-width: 50px;
     }
 
     &::selection {
@@ -168,7 +182,7 @@ section.card {
         overflow-x: auto;
         white-space: nowrap;
         gap: var(--length-s);
-        
+
         scrollbar-width: thin;
 
         &>span {
@@ -193,7 +207,7 @@ section.card {
         width: 100%;
         box-sizing: border-box;
         padding: calc(var(--length-s) / 2);
-        
+
         &>.list_subtitle {
             width: calc(100% - var(--length-s));
             font-weight: bold;
@@ -204,13 +218,13 @@ section.card {
             -webkit-user-select: none;
             user-select: none;
         }
-        
+
         &>.scoll_wrapper {
             max-height: 55vh;
             overflow-y: auto;
             scrollbar-width: thin;
             box-sizing: border-box;
-            
+
             &>.list_group {
                 font-size: 0;
             }
@@ -312,7 +326,7 @@ section.card {
     overflow: hidden;
     border-radius: var(--length-3s);
     text-decoration: none;
-    
+
     display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -354,7 +368,7 @@ section.card {
         &[quality="high"] {
             outline: var(--length-6s) solid var(--golden);
         }
-    
+
         &[quality="ex-high"] {
             outline: var(--length-6s) solid var(--red);
         }
