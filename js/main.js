@@ -447,10 +447,12 @@ async function refreshUserData(isRandering) {
     // init
     if (accessToken !== null) {
         input.value = accessToken;
+        window.location.hash = accessToken;
     }
 
     input.addEventListener('change', function () {
         accessToken = this.value;
+        window.location.hash = accessToken;
         localStorage.setItem(LSKeys.bgmAccessToken, accessToken);
 
         // refresh
