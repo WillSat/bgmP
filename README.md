@@ -18,7 +18,7 @@
 1. 进入 [GitHub Pages](https://willsat.github.io/bgmP/)
 2. 网址后添加 `#` + `Access Token`  
 
-> 例如：**https://willsat.github.io/bgmP/`#KwFeFUumghghBlbWso7afnYb70OaahavTc3Z1WLs7iI`**
+> 例如：**https://willsat.github.io/bgmP/#KwFeFUumghghBlbWso7afnYb70OaahavTc3Z1WLs7iI**
 
 > 如何获取 Access Token?  
 > [创建个人令牌](https://next.bgm.tv/demo/access-token)
